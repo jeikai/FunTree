@@ -22,8 +22,10 @@ class HomescreenScreen extends StatelessWidget {
             backgroundColor: appTheme.green300Bc,
             resizeToAvoidBottomInset: false,
             body: Container(
-                width: SizeUtils.width,
-                height: SizeUtils.height,
+                constraints: BoxConstraints(
+                  maxHeight: SizeUtils.height,
+                  maxWidth: SizeUtils.width,
+                ),
                 decoration: BoxDecoration(
                     color: appTheme.green300Bc,
                     image: DecorationImage(
@@ -35,8 +37,9 @@ class HomescreenScreen extends StatelessWidget {
                       _buildPlaylist(context),
                       SizedBox(height: 5.v),
                       Container(
+                          height: 675.v,
                           padding: EdgeInsets.symmetric(
-                              horizontal: 19.h, vertical: 13.v),
+                              horizontal: 13.h, vertical: 13.v),
                           decoration: AppDecoration.fillGreen.copyWith(
                               borderRadius: BorderRadiusStyle.customBorderTL30),
                           child:
@@ -44,18 +47,23 @@ class HomescreenScreen extends StatelessWidget {
                             CustomSearchView(
                                 controller: searchController,
                                 hintText: "Search my plants"),
-                            SizedBox(height: 17.v),
                             SizedBox(
                                 height: 456.v,
                                 width: 300.h,
                                 child: Stack(
                                     alignment: Alignment.topRight,
                                     children: [
-                                      CustomImageView(
-                                          imagePath: ImageConstant.imgBedroom,
-                                          height: 400.v,
-                                          width: 300.h,
-                                          alignment: Alignment.bottomCenter),
+                                      GestureDetector(
+                                        onTap: () {
+                                          print("tab");
+                                          onTapBedroom(context);
+                                        },
+                                        child: CustomImageView(
+                                            imagePath: ImageConstant.imgBedroom,
+                                            height: 400.v,
+                                            width: 300.h,
+                                            alignment: Alignment.bottomCenter),
+                                      ),
                                       Align(
                                           alignment: Alignment.topRight,
                                           child: Container(
@@ -245,5 +253,9 @@ class HomescreenScreen extends StatelessWidget {
   /// Navigates to the askingscreenScreen when the action is triggered.
   onTapFrameSix(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.askingscreenScreen);
+  }
+
+  onTapBedroom(BuildContext context) {
+    Navigator.pushNamed(context, AppRoutes.caredetailscreenPage);
   }
 }

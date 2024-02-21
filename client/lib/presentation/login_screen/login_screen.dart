@@ -19,8 +19,10 @@ class LoginScreen extends StatelessWidget {
             extendBodyBehindAppBar: true,
             resizeToAvoidBottomInset: false,
             body: Container(
-                width: SizeUtils.width,
-                height: SizeUtils.height,
+                constraints: BoxConstraints(
+                    maxHeight: SizeUtils.height,
+                    maxWidth: SizeUtils.width,
+                ),
                 decoration: BoxDecoration(
                     image: DecorationImage(
                         image: AssetImage(ImageConstant.imgLogin),
@@ -39,7 +41,7 @@ class LoginScreen extends StatelessWidget {
                       SizedBox(height: 40.v),
                       Container(
                           padding: EdgeInsets.symmetric(
-                              horizontal: 27.h, vertical: 36.v),
+                              horizontal: 27.h, vertical: 27.v),
                           decoration: AppDecoration.fillOnError.copyWith(
                               borderRadius: BorderRadiusStyle.customBorderTL30),
                           child: Column(
@@ -62,7 +64,7 @@ class LoginScreen extends StatelessWidget {
                                                   .bodyMediumff445d48)
                                         ]),
                                         textAlign: TextAlign.left)),
-                                SizedBox(height: 37.v),
+                                SizedBox(height: 10.v),
                                 Text("Email/phonenumber:",
                                     style: theme.textTheme.bodyLarge),
                                 SizedBox(height: 8.v),

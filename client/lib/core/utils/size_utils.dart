@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
@@ -25,7 +26,7 @@ class Sizer extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       return OrientationBuilder(builder: (context, orientation) {
-        SizeUtils.setScreenSize(constraints, orientation);
+        SizeUtils.setScreenSize(constraints, orientation, context);
         return builder(context, orientation, SizeUtils.deviceType);
       });
     });
@@ -53,6 +54,7 @@ class SizeUtils {
   static void setScreenSize(
     BoxConstraints constraints,
     Orientation currentOrientation,
+    BuildContext context,
   ) {
     // Sets boxConstraints and orientation
     boxConstraints = constraints;
@@ -60,13 +62,23 @@ class SizeUtils {
 
     // Sets screen width and height
     if (orientation == Orientation.portrait) {
-      width =
-          boxConstraints.maxWidth.isNonZero(defaultValue: FIGMA_DESIGN_WIDTH);
-      height = boxConstraints.maxHeight.isNonZero();
+      width = min(
+        boxConstraints.maxWidth.isNonZero(defaultValue: FIGMA_DESIGN_WIDTH),
+        MediaQuery.of(context).size.width,
+      );
+      height = min(
+        boxConstraints.maxHeight.isNonZero(),
+        MediaQuery.of(context).size.height,
+      );
     } else {
-      width =
-          boxConstraints.maxHeight.isNonZero(defaultValue: FIGMA_DESIGN_WIDTH);
-      height = boxConstraints.maxWidth.isNonZero();
+      width = min(
+        boxConstraints.maxHeight.isNonZero(defaultValue: FIGMA_DESIGN_WIDTH),
+        MediaQuery.of(context).size.height,
+      );
+      height = min(
+        boxConstraints.maxWidth.isNonZero(),
+        MediaQuery.of(context).size.width,
+      );
     }
     deviceType = DeviceType.mobile;
   }

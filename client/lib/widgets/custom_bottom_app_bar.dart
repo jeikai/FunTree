@@ -48,13 +48,19 @@ class CustomBottomAppBarState extends State<CustomBottomAppBar> {
         shape: CircularNotchedRectangle(),
         color: theme.colorScheme.onError,
         child: SizedBox(
-          height: 25.v,
+          height: 70.v,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: List.generate(
               bottomMenuList.length,
               (index) {
                 return InkWell(
+                  //make inkwell bigger
+
+                  customBorder: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.h),
+                  ),
+
                   onTap: () {
                     for (var element in bottomMenuList) {
                       element.isSelected = false;
@@ -74,7 +80,7 @@ class CustomBottomAppBarState extends State<CustomBottomAppBar> {
                               width: 25.adaptSize,
                             ),
                             Padding(
-                              padding: EdgeInsets.only(top: 1.v),
+                              padding: EdgeInsets.only(top: 10.v),
                               child: Text(
                                 bottomMenuList[index].title ?? "",
                                 style: theme.textTheme.bodySmall!.copyWith(
