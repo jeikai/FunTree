@@ -1,4 +1,9 @@
 const express = require('express')
+const api = express.Router();
+const weatherController = require('../controllers/weatherController')
 
-const router = express.Router;
+api.get("/api/weather", weatherController.getCurrentWeatherData)
+
+module.exports = api;
+
 
