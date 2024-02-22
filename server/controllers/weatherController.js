@@ -1,28 +1,27 @@
 const axios = require('axios');
-const { GGMAP_GEOCODE_URL } = require('../config/const');
+const { GGMAP_GEOCODE_URL, OPEN_WEATHER_URL } = require('../config/const');
 
-//! Need current location from FE
-const getWeatherData = async (loc) => {
-	// getLatandLon
-	const geometry = await getLatandLon(loc);
+/**
+ * Retrieves weather data for a given location.
+ * @param {string} location - The location for which to retrieve weather data.
+ * @returns {Promise<string|null>} - A promise that resolves to a JSON string containing the weather data, or null if an error occurs.
+ */
+const getWeatherData = async (location) => {
+	const geometry = await getLatAndLon(location);
 	const { lat, lng } = JSON.parse(geometry);
-	const appid = process.env.OPEN_WEATHER_API_KEY;
 
 	try {
-		const weather = await axios.get(
-			'https://api.openweathermap.org/data/3.0/onecall',
-			{
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				params: {
-					lat: lat,
-					lon: lng,
-					appid: appid,
-				},
-			}
-		);
+		const weather = await axios.get(OPEN_WEATHER_URL, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			params: {
+				lat: lat,
+				lon: lng,
+				appid: process.env.OPEN_WEATHER_API_KEY,
+			},
+		});
 		const { timezone, current } = await weather.data;
 		return JSON.stringify({
 			timezone,
@@ -30,15 +29,21 @@ const getWeatherData = async (loc) => {
 		});
 	} catch (error) {
 		console.log('Error fetch weather data', error);
+		return null;
 	}
-	return null;
 };
-const getLatandLon = async (loc) => {
+
+/**
+ * Retrieves the latitude and longitude coordinates for a given location.
+ * @param {string} location - The location for which to retrieve the coordinates.
+ * @returns {Promise<string|null>} A promise that resolves to a JSON string containing the latitude and longitude coordinates, or null if an error occurs.
+ */
+const getLatAndLon = async (location) => {
 	try {
 		const geoInfo = await axios.get(GGMAP_GEOCODE_URL, {
 			method: 'GET',
 			params: {
-				address: loc,
+				address: location,
 				key: process.env.GGMAP_API_KEY,
 			},
 			headers: {
@@ -55,10 +60,9 @@ const getLatandLon = async (loc) => {
 		});
 	} catch (error) {
 		console.log('Error fetching geometry info', error.data);
+		return null;
 	}
 };
 module.exports = {
 	getWeatherData,
 };
-
-getWeatherData('Hanoi, Vietnam');
