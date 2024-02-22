@@ -86,7 +86,7 @@ const getWeather = async (lat, lng) => {
 		const { timezone, current } = await weather.data;
 		return { timezone, current };
 	} catch (error) {
-		console.log('Error fetch weather data', error);
+		console.log('Error fetch openweather data', error);
 		return null;
 	}
 };
