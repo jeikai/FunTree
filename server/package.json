@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +22,7 @@
     "firebase-admin": "^12.0.0",
     "googleapis": "^129.0.0",
     "jsonwebtoken": "^9.0.1",
+    "just": "^0.1.8",
     "multer": "^1.4.5-lts.1",
     "node-fetch": "^3.3.2",
     "request": "^2.88.2"
