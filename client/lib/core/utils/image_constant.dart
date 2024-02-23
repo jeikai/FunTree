@@ -117,4 +117,6 @@ class ImageConstant {
   static String imgBraveAi = '$imagePath/img_brave_ai.png';
 
   static String imageNotFound = 'assets/images/image_not_found.png';
+
+  static String imgTree = '$imagePath/img_pic_shop_4_3.png';
 }

@@ -4,6 +4,7 @@ import 'package:funtree/presentation/shoppingscreen_page/shoppingscreen_page.dar
 import 'package:funtree/widgets/custom_bottom_app_bar.dart';
 import 'package:funtree/widgets/custom_floating_button.dart';
 import 'package:funtree/widgets/custom_search_view.dart';
+import 'package:funtree/widgets/home_screen/home_map.dart';
 
 // ignore_for_file: must_be_immutable
 class HomescreenScreen extends StatelessWidget {
@@ -47,76 +48,7 @@ class HomescreenScreen extends StatelessWidget {
                             CustomSearchView(
                                 controller: searchController,
                                 hintText: "Search my plants"),
-                            SizedBox(
-                                height: 456.v,
-                                width: 300.h,
-                                child: Stack(
-                                    alignment: Alignment.topRight,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          print("tab");
-                                          onTapBedroom(context);
-                                        },
-                                        child: CustomImageView(
-                                            imagePath: ImageConstant.imgBedroom,
-                                            height: 400.v,
-                                            width: 300.h,
-                                            alignment: Alignment.bottomCenter),
-                                      ),
-                                      Align(
-                                          alignment: Alignment.topRight,
-                                          child: Container(
-                                              height: 76.adaptSize,
-                                              width: 76.adaptSize,
-                                              margin:
-                                                  EdgeInsets.only(right: 52.h),
-                                              child: Stack(
-                                                  alignment:
-                                                      Alignment.topCenter,
-                                                  children: [
-                                                    CustomImageView(
-                                                        imagePath: ImageConstant
-                                                            .imgTopic,
-                                                        height: 76.adaptSize,
-                                                        width: 76.adaptSize,
-                                                        alignment:
-                                                            Alignment.center),
-                                                    Align(
-                                                        alignment:
-                                                            Alignment.topCenter,
-                                                        child: Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    top: 24.v),
-                                                            child: Text(
-                                                                "Cactus",
-                                                                style: CustomTextStyles
-                                                                    .bodyMediumOnError_1)))
-                                                  ])))
-                                    ])),
-                            SizedBox(height: 13.v),
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  CustomImageView(
-                                      imagePath: ImageConstant.imgNextPage,
-                                      height: 33.adaptSize,
-                                      width: 33.adaptSize,
-                                      margin: EdgeInsets.only(top: 5.v)),
-                                  Padding(
-                                      padding: EdgeInsets.only(left: 12.h),
-                                      child: Text("Bedroom",
-                                          style: CustomTextStyles
-                                              .headlineLargeGreen60001)),
-                                  CustomImageView(
-                                      imagePath: ImageConstant.imgNextPage33x33,
-                                      height: 33.adaptSize,
-                                      width: 33.adaptSize,
-                                      margin:
-                                          EdgeInsets.only(left: 13.h, top: 5.v))
-                                ]),
+                            HomeMap(key: Key("homemap"),),
                             SizedBox(height: 13.v)
                           ]))
                     ]))),
@@ -220,7 +152,7 @@ class HomescreenScreen extends StatelessWidget {
   /// Section Widget
   Widget _buildBottomAppBar(BuildContext context) {
     return CustomBottomAppBar(onChanged: (BottomBarEnum type) {
-      Navigator.pushNamed(navigatorKey.currentContext!, getCurrentRoute(type));
+      Navigator.pushReplacementNamed(navigatorKey.currentContext!, getCurrentRoute(type));
     });
   }
 
