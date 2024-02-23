@@ -1,11 +1,10 @@
-const axios = require('axios');
-const {
+import axios from 'axios';
+import {
 	GGMAP_GEOCODE_URL,
 	OPEN_WEATHER_URL,
 	GGMAP_AQI_URL,
-	AIR_VISUAL_AQI_URL,
-} = require('../config/const');
-
+} from '../config/const.js';
+import { AIR_VISUAL_AQI_URL } from '@/config/const.js';
 /**
  * Retrieves the latitude and longitude of a given location.
  * @param {string} location - The address or location to retrieve the coordinates for.
@@ -30,7 +29,7 @@ const getLatAndLng = async (location) => {
 	}
 };
 
-exports.getCurrentWeatherData = async (req, res) => {
+const getCurrentWeatherData = async (req, res) => {
 	const { location } = req.query;
 	try {
 		const { lat, lng } = await getLatAndLng(location);
@@ -88,7 +87,7 @@ exports.getCurrentWeatherData = async (req, res) => {
 	}
 };
 
-exports.getForecastWeatherData = async (req, res) => {
+const getForecastWeatherData = async (req, res) => {
 	const { days, location } = req.query;
 	const currentDate = new Date();
 	//add 4 days to current date
@@ -135,3 +134,5 @@ exports.getForecastWeatherData = async (req, res) => {
 		});
 	}
 };
+
+export { getCurrentWeatherData, getForecastWeatherData };
