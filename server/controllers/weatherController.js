@@ -3,46 +3,13 @@ const {
 	GGMAP_GEOCODE_URL,
 	OPEN_WEATHER_URL,
 	GGMAP_AQI_URL,
+	AIR_VISUAL_AQI_URL,
 } = require('../config/const');
 
 /**
- * Retrieves the Air Quality Index (AQI) information for a given latitude and longitude.
- * @param {number} lat - The latitude of the location.
- * @param {number} lng - The longitude of the location.
- * @returns {Promise<number|null>} The AQI value or null if an error occurs.
- */
-const getAQIInfo = async (lat, lng) => {
-	try {
-		const aqiRequest = axios.post(
-			GGMAP_AQI_URL,
-			{
-				location: {
-					latitude: lat,
-					longitude: lng,
-				},
-			},
-			{
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				params: {
-					key: process.env.GGMAP_API_KEY,
-				},
-			}
-		);
-		const { data } = await aqiRequest;
-		const aqi = data.indexes[0].aqi;
-		return aqi;
-	} catch (error) {
-		console.log('Error fetch AQI data', error);
-		return null;
-	}
-};
-
-/**
- * Retrieves the latitude and longitude for a given location.
- * @param {string} location - The location.
- * @returns {Promise<{lat: number, lng: number}|null>} The latitude and longitude of the location or null if an error occurs.
+ * Retrieves the latitude and longitude of a given location.
+ * @param {string} location - The address or location to retrieve the coordinates for.
+ * @returns {Promise<{ lat: number, lng: number } | null>} The latitude and longitude of the location, or null if an error occurred.
  */
 const getLatAndLng = async (location) => {
 	try {
@@ -63,14 +30,11 @@ const getLatAndLng = async (location) => {
 	}
 };
 
-/**
- * Retrieves weather data for a given latitude and longitude.
- * @param {number} lat - The latitude.
- * @param {number} lng - The longitude.
- * @returns {Promise<{timezone: string, current: object}>} The weather data, including the timezone and current weather information.
- */
-const getWeather = async (lat, lng) => {
+exports.getCurrentWeatherData = async (req, res) => {
+	const { location } = req.query;
 	try {
+		const { lat, lng } = await getLatAndLng(location);
+		console.log(`lat: ${lat}, lng: ${lng}`);
 		const weather = await axios.get(OPEN_WEATHER_URL, {
 			headers: {
 				'Content-Type': 'application/json',
@@ -83,30 +47,84 @@ const getWeather = async (lat, lng) => {
 				appid: process.env.OPEN_WEATHER_API_KEY,
 			},
 		});
-		const { timezone, current } = await weather.data;
-		return { timezone, current };
-	} catch (error) {
-		console.log('Error fetch openweather data', error);
-		return null;
-	}
-};
-
-/**
- * Retrieves weather data for a given location.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
- * @returns {Object} The weather data for the location.
- */
-exports.getCurrentWeatherData = async (req, res) => {
-	const { location } = req.query;
-	try {
-		const { lat, lng } = await getLatAndLng(location);
-		const { timezone, current } = await getWeather(lat, lng);
-		const aqiIndex = await getAQIInfo(lat, lng);
+		const { current } = await weather.data;
+		const aqiRequest = axios.post(
+			GGMAP_AQI_URL,
+			{
+				universalAqi: false,
+				location: {
+					latitude: lat,
+					longitude: lng,
+				},
+				extraComputations: ['HEALTH_RECOMMENDATIONS', 'LOCAL_AQI'],
+			},
+			{
+				headers: { 'Content-Type': 'application/json' },
+				params: { key: process.env.GGMAP_API_KEY },
+			}
+		);
+		const { data } = await aqiRequest;
+		const { aqi, category } = data.indexes[0];
+		const healthRecommendations = data.healthRecommendations;
 		return res.status(200).json({
 			status: true,
 			message: 'OK',
-			data: { aqiIndex, timezone, ...current },
+			data: {
+				airQuality: {
+					aqi,
+					category,
+					healthRecommendations,
+				},
+				weather: { ...current },
+			},
+		});
+	} catch (error) {
+		console.log('Error fetch weather data', error);
+		return res.status(500).json({
+			status: false,
+			message: error.message,
+			data: null,
+		});
+	}
+};
+
+exports.getForecastWeatherData = async (req, res) => {
+	const { days, location } = req.query;
+	const currentDate = new Date();
+	//add 4 days to current date
+	let forecastDate = new Date(currentDate);
+	forecastDate.setDate(forecastDate.getDate() + parseInt(days));
+	//convert to string
+
+	forecastDate = forecastDate.toISOString().split('T')[0];
+	console.log(forecastDate);
+	try {
+		const { lat, lng } = await getLatAndLng(location);
+		console.log(`lat: ${lat}, lng: ${lng}`);
+		const weather = await axios.get(`${OPEN_WEATHER_URL}/day_summary`, {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			params: {
+				lat: lat,
+				lon: lng,
+				date: forecastDate,
+				appid: process.env.OPEN_WEATHER_API_KEY,
+				units: 'metric',
+			},
+		});
+		const { humidity, wind, precipitation, temperature } = await weather.data;
+		return res.status(200).json({
+			status: true,
+			message: 'OK',
+			data: {
+				forecastWeather: {
+					humidity: humidity.afternoon,
+					wind,
+					precipitation: precipitation.total,
+					temperature,
+				},
+			},
 		});
 	} catch (error) {
 		console.log('Error fetch weather data', error);
