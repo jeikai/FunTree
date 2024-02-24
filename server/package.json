@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "dev": "nodemon --exec babel-node src/index.js",
+    "start": "node index.js",
     "test": "jest"
   },
   "keywords": [],
@@ -12,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@google-cloud/storage": "^7.7.0",
+    "@google/generative-ai": "^0.2.1",
     "axios": "^1.5.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -23,11 +25,19 @@
     "googleapis": "^129.0.0",
     "jsonwebtoken": "^9.0.1",
     "just": "^0.1.8",
+    "mongoose": "^8.2.0",
     "multer": "^1.4.5-lts.1",
     "node-fetch": "^3.3.2",
     "request": "^2.88.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.22"
+    "@babel/core": "^7.23.9",
+    "@babel/node": "^7.23.9",
+    "@babel/preset-env": "^7.23.9",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.20",
+    "babel-plugin-root-import": "^6.6.0",
+    "nodemon": "^2.0.22",
+    "typescript": "^5.3.3"
   }
 }
