@@ -6,6 +6,7 @@ import {
 	OPEN_WEATHER_URL,
 	GGMAP_AQI_URL,
 } from '../config/const.js';
+import { normalizeString } from '../utils/utils.js';
 import Plant from '@/model/Plant.js';
 import { getLatAndLng } from '../utils/utils.js';
 export const identifyPlant = async (req, res) => {
@@ -53,14 +54,17 @@ export const identifyPlant = async (req, res) => {
 			}
 		);
 		const healthResult = await healthAssessment.data;
-		
-		//* Save plants to database	
+
+		//* Save plants to database
 		const data = {
 			plant_id: plantInfo.id,
 			name: plantInfo.name,
-			common_names: plantInfo.details.common_names[0],
+			common_names: normalizeString(plantInfo.details.common_names[0]),
 			url: plantInfo.details.url,
-			description: plantInfo.details.description != null ? plantInfo.details.description : 'No description available',
+			description:
+				plantInfo.details.description != null
+					? plantInfo.details.description.value
+					: 'No description available',
 			edible_parts: plantInfo.details.edible_parts,
 			watering: {
 				max: plantInfo.details.watering.max,
@@ -68,7 +72,7 @@ export const identifyPlant = async (req, res) => {
 			},
 		};
 		const newPlant = await Plant.addNewPlant(data);
-		
+
 		return res.status(200).json({
 			status: true,
 			message: 'Plant identified successfully',

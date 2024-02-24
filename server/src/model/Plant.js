@@ -24,7 +24,7 @@ const plantSchema = new Schema({
 	},
 
 	edible_parts: {
-		type: String,
+		type: [String],
 		required: false,
 	},
 	watering: {

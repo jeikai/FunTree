@@ -17,7 +17,6 @@ export const getWateringData = async (req, res) => {
 	const AW = 300; // Lượng nước sẵn có trong đất (mm)
 	console.log((TAW - AW) / ET);
 
-	//add next watering date 4 days
 	const next_watering_date = new Date(
 		current_date.setDate(current_date.getDate() + parseInt((TAW - AW) / ET))
 	)
@@ -60,8 +59,37 @@ const fertilizerEfficiency = (plantName, temperature) => {
 	return efficiency;
 };
 export const getFertilizingData = async (req, res) => {
-	const { temperature: T, aqi: A } = await req.query;
-	const N = 100;
+	const {
+		temperature: T,
+		aqi: A,
+		plant_name: C,
+	} = await req.query;
+
+	switch (C) {
+		case 'Tomato':
+			N = data[0];
+			break;
+		case 'Garden Tomato':
+			N = data[0];
+			break;
+		case 'Cucumber':
+			N = data[1];
+			break;
+		case 'Bell Pepper':
+			N = data[2];
+			break;
+		case 'Lettuce':
+			N = data[3];
+			break;
+		case 'Snake Plant':
+			N = data[4];
+			break;
+		default:
+			const N = 0;
+
+			break;
+	}
+
 	const nuptake = 0.0;
 	// for (const action of pastCareData) {
 	// 	if (action.action === 'fertilize') {
