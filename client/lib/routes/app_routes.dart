@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:funtree/presentation/caredetailscreen_page/caredetailscreen_page.dart';
+import 'package:funtree/presentation/homescreen_screen/mapeditorscreen_screen/mapeditorscreen_screen.dart';
 import 'package:funtree/presentation/login_screen/login_screen.dart';
 import 'package:funtree/presentation/caredetailscreen_tab_container_screen/caredetailscreen_tab_container_screen.dart';
 import 'package:funtree/presentation/remiderdetailscreen_tab_container_screen/remiderdetailscreen_tab_container_screen.dart';
@@ -41,6 +42,8 @@ class AppRoutes {
 
   static const String appNavigationScreen = '/app_navigation_screen';
 
+  static const String mapEditorScreen = '/map_editor_screen';
+
   static Map<String, WidgetBuilder> routes = {
     loginScreen: (context) => LoginScreen(),
     caredetailscreenPage: (context) => CaredetailscreenPage(),
@@ -54,6 +57,7 @@ class AppRoutes {
     askingscreenScreen: (context) => AskingscreenScreen(),
     communityscreenScreen: (context) => CommunityscreenScreen(),
     chattingscreenScreen: (context) => ChattingscreenScreen(),
-    appNavigationScreen: (context) => AppNavigationScreen()
+    appNavigationScreen: (context) => AppNavigationScreen(),
+    mapEditorScreen: (context) => MapEditorScreen(),
   };
 }

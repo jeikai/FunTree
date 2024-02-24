@@ -2,7 +2,7 @@ name: funtree
 description: A new Flutter project.
 version: 1.0.0+1
 environment: 
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=3.0.0'
 dependencies: 
   flutter: 
     sdk: flutter
@@ -10,6 +10,10 @@ dependencies:
   flutter_svg: ^2.0.9
   readmore: ^2.2.0
   intl: ^0.18.0
+  dotted_border: ^2.0.0
+  carousel_slider: ^4.2.1
+  uuid: ^4.2.2
+  shared_preferences: ^2.0.6
 dev_dependencies: 
   flutter_test: 
     sdk: flutter
