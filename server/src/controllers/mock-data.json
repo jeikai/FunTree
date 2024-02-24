@@ -1,0 +1,86 @@
+[
+    {
+        "temperature": 25,
+        "aqi": 50,
+        "humidity": 60,
+        "wind_speed": 10,
+        "plant_name": "Tomato",
+        "past_care_data": [
+            {
+                "action": "fertilize",
+                "amount": 10,
+                "date": "2023-11-15"
+            },
+            {
+                "action": "water",
+                "amount": 20,
+                "date": "2023-11-17"
+            }
+        ],
+        "N": 0.2,
+        "TAW": 50,
+        "AW": 30
+    },
+    {
+        "temperature": 28,
+        "aqi": 40,
+        "humidity": 50,
+        "wind_speed": 15,
+        "plant_name": "Cucumber",
+        "past_care_data": [
+            {
+                "action": "fertilize",
+                "amount": 15,
+                "date": "2023-11-10"
+            }
+        ],
+        "N": 0.3,
+        "TAW": 60,
+        "AW": 40
+    },
+    {
+        "temperature": 30,
+        "aqi": 60,
+        "humidity": 70,
+        "wind_speed": 5,
+        "plant_name": "Bell Pepper",
+        "past_care_data": [],
+        "N": 0.4,
+        "TAW": 40,
+        "AW": 25
+    },
+    {
+        "temperature": 22,
+        "aqi": 70,
+        "humidity": 80,
+        "wind_speed": 2,
+        "plant_name": "Lettuce",
+        "past_care_data": [
+            {
+                "action": "water",
+                "amount": 30,
+                "date": "2023-11-19"
+            }
+        ],
+        "N": 0.1,
+        "TAW": 70,
+        "AW": 50
+    },
+    {
+        "temperature": 22,
+        "aqi": 65,
+        "humidity": 45,
+        "wind_speed": 5,
+        "plant_name": "Snake Plant",
+        "past_care_data": [
+            {
+                "action": "water",
+                "amount": 15,
+                "date": "2024-02-10"
+            }
+        ],
+        "N": 0.2,
+        "TAW": 80,
+        "AW": 50
+    }
+]
