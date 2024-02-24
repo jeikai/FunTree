@@ -1,3 +1,4 @@
 import weatherRoute from './weatherRoute.js';
 import chatRoute from './chatRoute.js';
-export default [weatherRoute, chatRoute];
+import plantRoute from './plantRoute.js';
+export default [weatherRoute, chatRoute, plantRoute];
