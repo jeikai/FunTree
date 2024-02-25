@@ -6,9 +6,8 @@ import {
 } from '../config/const.js';
 import { getLatAndLng } from '../utils/utils.js';
 const getCurrentWeatherData = async (req, res) => {
-	const { location } = req.query;
+	const { lat, lng } = req.query; 
 	try {
-		const { lat, lng } = await getLatAndLng(location);
 		console.log(`lat: ${lat}, lng: ${lng}`);
 		const weather = await axios.get(OPEN_WEATHER_URL, {
 			headers: {

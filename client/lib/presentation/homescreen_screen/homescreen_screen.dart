@@ -1,25 +1,92 @@
 import 'package:flutter/material.dart';
 import 'package:funtree/core/app_export.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:funtree/widgets/custom_search_view.dart';
 import 'package:funtree/widgets/home_screen/home_map.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+
+import '../../backend/backend.dart';
+
 class HomescreenScreen extends StatefulWidget {
   const HomescreenScreen({super.key});
 
   @override
   State<HomescreenScreen> createState() => _HomescreenScreenState();
 }
-class _HomescreenScreenState extends State<HomescreenScreen> {
 
+class _HomescreenScreenState extends State<HomescreenScreen> {
   TextEditingController searchController = TextEditingController();
 
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+  double latitude = 0.0;
+  double longitude = 0.0;
+  double AQI = 0.0;
+  double humidity = 0.0;
+  double wind = 0.0;
+  double temp = 0.0;
+  String currentAddress = "";
+
+  Future<void> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      print('Location services are disabled.');
+      return;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        print('Location permissions are denied');
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      print(
+          'Location permissions are permanently denied, we cannot request permissions.');
+      return;
+    }
+    Position position = await Geolocator.getCurrentPosition();
+    latitude = position.latitude;
+    longitude = position.longitude;
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(52.2165157, 6.9437819);
+    print(placemarks[0]);
+    Placemark place = placemarks[0];
+    currentAddress = "${place.locality}, ${place.country}";
+  }
+  Future<void> getWeather() async {
+    try {
+      final api = Api();
+      final response = await api.getData("weather/current?lat=${latitude}&lng=${longitude}");
+      if (response != null) {
+        print(response["data"]["airQuality"]["aqi"]);
+        print(response["data"]["weather"]);
+        AQI = response["data"]["airQuality"]["aqi"];
+        humidity = response["data"]["weather"]["humidity"];
+        wind = response["data"]["weather"]["wind_speed"];
+        temp = response["data"]["weather"]["temp"];
+      } else {
+        print("Failed to fetch weather data: Response is null.");
+      }
+    } catch (e) {
+      print("An error occurred while fetching weather data: $e");
+    }
+  }
+
   @override
   void initState() {
+    _determinePosition().then((_) {
+      getWeather();
+    });
     super.initState();
-
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -128,7 +195,7 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           SizedBox(
               height: 92.v,
-              width: 158.h,
+              width: 220.h,
               child: Stack(alignment: Alignment.topCenter, children: [
                 Align(
                     alignment: Alignment.bottomLeft,
@@ -146,20 +213,33 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
                               width: 60.adaptSize,
                               margin: EdgeInsets.only(top: 5.v, bottom: 6.v)),
                           Container(
-                              width: 88.h,
+                              width: 150.h,
                               margin: EdgeInsets.only(left: 10.h),
                               child: RichText(
                                   text: TextSpan(children: [
                                     TextSpan(
-                                        text:
-                                            "Address: Hanoi\nTemperature: 29° AQI: ",
+                                        text: "Address: ${currentAddress}\n",
+                                        style:
+                                            CustomTextStyles.bodySmallffffffff),
+                                    TextSpan(
+                                        text: "Temperature: ${temp}°\n",
                                         style:
                                             CustomTextStyles.bodySmallffffffff),
                                     TextSpan(
                                         text:
-                                            "112 Humidity: 95%\nWind: 13 km/h",
+                                        "AQI: ${AQI.toString()}\n",
                                         style:
-                                            CustomTextStyles.bodySmallffff9b57)
+                                        CustomTextStyles.bodySmallffffffff),
+                                    TextSpan(
+                                        text:
+                                        "Humidity: ${humidity} %\n",
+                                        style:
+                                        CustomTextStyles.bodySmallffffffff),
+                                    TextSpan(
+                                        text:
+                                        "Wind: ${wind} km/h",
+                                        style:
+                                        CustomTextStyles.bodySmallffffffff),
                                   ]),
                                   textAlign: TextAlign.left))
                         ]))
@@ -168,7 +248,7 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
               padding: EdgeInsets.only(top: 8.v, bottom: 5.v),
               child: Column(children: [
                 SizedBox(
-                    width: 97.h,
+                    width: 90.h,
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

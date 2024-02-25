@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:funtree/core/map/map.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 void saveMaps() {
   // Save maps to local storage
@@ -20,5 +21,28 @@ void loadMap() {
       maps = data.map<TreeMap>((e) => TreeMap.fromJson(e)).toList();
     }
   });
-  // Load maps from cloud storage
+}
+
+class Api {
+  static String baseUrl = "http://192.168.40.222:3000/api/";
+
+  Future<Map<String, dynamic>?> getData(String path) async {
+    final Uri uri = Uri.parse(baseUrl + path);
+    try {
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+      };
+      final http.Response response = await http.get(uri, headers: headers);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Map<String, dynamic> jsonDataList = jsonDecode(response.body);
+        return jsonDataList;
+      } else {
+        print('Có lỗi xảy ra: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Lỗi: $e');
+      return null;
+    }
+  }
 }
