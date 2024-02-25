@@ -3,6 +3,7 @@ import 'package:funtree/core/app_export.dart';
 import 'package:funtree/presentation/shoppingscreen_page/shoppingscreen_page.dart';
 import 'package:funtree/widgets/custom_bottom_app_bar.dart';
 import 'package:funtree/widgets/custom_floating_button.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:readmore/readmore.dart';
 
 class CommunityscreenScreen extends StatelessWidget {
@@ -16,68 +17,116 @@ class CommunityscreenScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        extendBody: true,
-        extendBodyBehindAppBar: true,
-        backgroundColor: appTheme.green300Bc,
-        body: Container(
-          width: SizeUtils.width,
-          height: SizeUtils.height,
-          decoration: BoxDecoration(
-            color: appTheme.green300Bc,
-            image: DecorationImage(
-              image: AssetImage(
-                ImageConstant.imgLogin,
-              ),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: SizedBox(
-            height: 717.v,
-            width: double.maxFinite,
-            child: Stack(
-              alignment: Alignment.topCenter,
-              children: [
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 30.v),
-                    decoration: AppDecoration.fillGreen,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        _buildFunTreeSection(context),
-                        Divider(),
-                        Spacer(),
-                        SizedBox(height: 52.v),
-                        CustomImageView(
-                          imagePath: ImageConstant.imgCreate32x32,
-                          height: 32.adaptSize,
-                          width: 32.adaptSize,
-                          margin: EdgeInsets.only(right: 12.h),
-                        ),
-                      ],
-                    ),
+        child: Scaffold(
+            extendBody: true,
+            extendBodyBehindAppBar: true,
+            backgroundColor: appTheme.green300Bc,
+            body: Container(
+              width: SizeUtils.width,
+              height: SizeUtils.height,
+              decoration: BoxDecoration(
+                color: appTheme.green300Bc,
+                image: DecorationImage(
+                  image: AssetImage(
+                    ImageConstant.imgLogin,
                   ),
+                  fit: BoxFit.cover,
                 ),
-                _buildFemaleProfileSection(context),
-              ],
+              ),
+              child: SizedBox(
+                height: 717.v,
+                width: double.maxFinite,
+                child: Stack(
+                  alignment: Alignment.topCenter,
+                  children: [
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 30.v),
+                        decoration: AppDecoration.fillGreen,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            _buildFunTreeSection(context),
+                            Divider(),
+                            Spacer(),
+                            SizedBox(height: 52.v),
+                            CustomImageView(
+                              imagePath: ImageConstant.imgCreate32x32,
+                              height: 32.adaptSize,
+                              width: 32.adaptSize,
+                              margin: EdgeInsets.only(right: 12.h),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    _buildFemaleProfileSection(context),
+                  ],
+                ),
+              ),
             ),
-          ),
-        ),
-        bottomNavigationBar: _buildBottomAppBarSection(context),
-        floatingActionButton: CustomFloatingButton(
-          height: 48,
-          width: 48,
-          backgroundColor: appTheme.green600,
-          child: CustomImageView(
-            imagePath: ImageConstant.imgFrame9,
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      ),
-    );
+            bottomNavigationBar: Container(
+              color: Colors.white,
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 20),
+                  child: GNav(
+                    padding: EdgeInsets.all(16),
+                    color: Color.fromRGBO(73, 136, 85, 1),
+                    activeColor: Color.fromRGBO(73, 136, 85, 1),
+                    backgroundColor: Colors.white,
+                    tabBackgroundColor: Colors.grey.withOpacity(0.1),
+                    gap: 8,
+                    onTabChange: (index) {
+                      switch (index) {
+                        case 0:
+                          Navigator.pushNamed(
+                              context, AppRoutes.homescreenScreen);
+                          break;
+                        case 1:
+                          Navigator.pushNamed(
+                              context, AppRoutes.shoppingscreenContainerScreen);
+                          break;
+                        case 2:
+                          Navigator.pushNamed(
+                              context, AppRoutes.camerascreenScreen);
+                          break;
+                        case 3:
+                          Navigator.pushNamed(
+                              context, AppRoutes.communityscreenScreen);
+                          break;
+                        case 4:
+                          Navigator.pushNamed(
+                              context, AppRoutes.chattingscreenScreen);
+                          break;
+                      }
+                    },
+                    tabs: const [
+                      GButton(
+                        icon: Icons.home,
+                        text: 'My garden',
+                      ),
+                      GButton(
+                        icon: Icons.shopping_cart,
+                        text: 'Shopping',
+                      ),
+                      GButton(
+                        icon: Icons.camera_alt,
+                        text: 'Camera',
+                      ),
+                      GButton(
+                        icon: Icons.people,
+                        text: 'Community',
+                      ),
+                      GButton(
+                        icon: Icons.chat_bubble_outlined,
+                        text: 'AI',
+                      ),
+                    ],
+                  )),
+            )));
   }
 
   /// Section Widget

@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:funtree/core/app_export.dart';
-import 'package:funtree/presentation/shoppingscreen_page/shoppingscreen_page.dart';
-import 'package:funtree/widgets/custom_bottom_app_bar.dart';
-import 'package:funtree/widgets/custom_floating_button.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:funtree/widgets/custom_search_view.dart';
 import 'package:funtree/widgets/home_screen/home_map.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+class HomescreenScreen extends StatefulWidget {
+  const HomescreenScreen({super.key});
 
-// ignore_for_file: must_be_immutable
-class HomescreenScreen extends StatelessWidget {
-  HomescreenScreen({Key? key}) : super(key: key);
+  @override
+  State<HomescreenScreen> createState() => _HomescreenScreenState();
+}
+class _HomescreenScreenState extends State<HomescreenScreen> {
 
   TextEditingController searchController = TextEditingController();
 
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+  @override
+  void initState() {
+    super.initState();
 
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -74,8 +79,8 @@ class HomescreenScreen extends StatelessWidget {
                                 context, AppRoutes.homescreenScreen);
                             break;
                           case 1:
-                            Navigator.pushNamed(
-                                context, AppRoutes.shoppingscreenContainerScreen);
+                            Navigator.pushNamed(context,
+                                AppRoutes.shoppingscreenContainerScreen);
                             break;
                           case 2:
                             Navigator.pushNamed(

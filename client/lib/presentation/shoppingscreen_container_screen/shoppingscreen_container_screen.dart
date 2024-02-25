@@ -3,6 +3,7 @@ import 'package:funtree/core/app_export.dart';
 import 'package:funtree/presentation/shoppingscreen_page/shoppingscreen_page.dart';
 import 'package:funtree/widgets/custom_bottom_app_bar.dart';
 import 'package:funtree/widgets/custom_floating_button.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 
 // ignore_for_file: must_be_immutable
 class ShoppingscreenContainerScreen extends StatelessWidget {
@@ -32,37 +33,65 @@ class ShoppingscreenContainerScreen extends StatelessWidget {
                         pageBuilder: (ctx, ani, ani1) =>
                             getCurrentPage(routeSetting.name!),
                         transitionDuration: Duration(seconds: 0)))),
-            bottomNavigationBar: _buildBottomAppBarSection(context),
-            floatingActionButton: CustomFloatingButton(
-                height: 48,
-                width: 48,
-                backgroundColor: appTheme.green600,
-                child: CustomImageView(imagePath: ImageConstant.imgFrame9)),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked));
-  }
-
-  /// Section Widget
-  Widget _buildBottomAppBarSection(BuildContext context) {
-    return CustomBottomAppBar(onChanged: (BottomBarEnum type) {
-      Navigator.pushNamed(navigatorKey.currentContext!, getCurrentRoute(type));
-    });
-  }
-
-  ///Handling route based on bottom click actions
-  String getCurrentRoute(BottomBarEnum type) {
-    switch (type) {
-      case BottomBarEnum.Mygarden:
-        return AppRoutes.shoppingscreenPage;
-      case BottomBarEnum.Shop:
-        return "/";
-      case BottomBarEnum.Community:
-        return "/";
-      case BottomBarEnum.Ai:
-        return "/";
-      default:
-        return "/";
-    }
+            bottomNavigationBar: Container(
+                color: Colors.white,
+                child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 20),
+                    child: GNav(
+                      padding: EdgeInsets.all(16),
+                      color: Color.fromRGBO(73, 136, 85, 1),
+                      activeColor: Color.fromRGBO(73, 136, 85, 1),
+                      backgroundColor: Colors.white,
+                      tabBackgroundColor: Colors.grey.withOpacity(0.1),
+                      gap: 8,
+                      onTabChange: (index) {
+                        switch (index) {
+                          case 0:
+                            Navigator.pushNamed(
+                                context, AppRoutes.homescreenScreen);
+                            break;
+                          case 1:
+                            Navigator.pushNamed(context,
+                                AppRoutes.shoppingscreenContainerScreen);
+                            break;
+                          case 2:
+                            Navigator.pushNamed(
+                                context, AppRoutes.camerascreenScreen);
+                            break;
+                          case 3:
+                            Navigator.pushNamed(
+                                context, AppRoutes.communityscreenScreen);
+                            break;
+                          case 4:
+                            Navigator.pushNamed(
+                                context, AppRoutes.chattingscreenScreen);
+                            break;
+                        }
+                      },
+                      tabs: const [
+                        GButton(
+                          icon: Icons.home,
+                          text: 'My garden',
+                        ),
+                        GButton(
+                          icon: Icons.shopping_cart,
+                          text: 'Shopping',
+                        ),
+                        GButton(
+                          icon: Icons.camera_alt,
+                          text: 'Camera',
+                        ),
+                        GButton(
+                          icon: Icons.people,
+                          text: 'Community',
+                        ),
+                        GButton(
+                          icon: Icons.chat_bubble_outlined,
+                          text: 'AI',
+                        ),
+                      ],
+                    )))));
   }
 
   ///Handling page based on route
