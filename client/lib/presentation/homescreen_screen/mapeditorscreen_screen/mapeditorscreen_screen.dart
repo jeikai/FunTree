@@ -317,6 +317,9 @@ ValueNotifier<bool?> _isPlaced = ValueNotifier(null);
 class _MainEditorState extends State<MainEditor> {
   int? get index => _isPlaced.value == null || _isPlaced.value! ? null : widget.index;
 
+  bool _isDragging = false;
+  TreeObject? draggingObject;
+
   @override
   Widget build(BuildContext context) {
     print('build main editor: _isPlaced = $_isPlaced');
@@ -360,18 +363,41 @@ class _MainEditorState extends State<MainEditor> {
               width: 300.h,
               alignment: Alignment.bottomCenter),
           ...map.treeObjects.map((e) {
+            var w = _isDragging? e.width * 1.5 : e.width;
+            var h = _isDragging? e.height * 1.5 : e.height;
             return Positioned(
-                left: e.x - e.width / 2,
-                top: e.y - e.height / 2,
-                child: CustomImageView(
-                  border: Border.all(),
-                  radius: BorderRadius.circular(50.adaptSize),
-                  imagePath: e.imagePath,
-                  height: e.height,
-                  width: e.width,
-                  alignment: Alignment.center,
+                left: e.x - w / 2,
+                top: e.y - h / 2,
+                child: GestureDetector(
+                  onLongPress: _isDragging ? null : () => _onHold(e),
+                  onPanUpdate: _isDragging ? _onDrag : null,
+                  onLongPressEnd: (details) => setState(() => _isDragging = false),
+                  onPanEnd: (details) => setState(() => _isDragging = false),
+                  child: CustomImageView(
+                    border: Border.all(),
+                    radius: BorderRadius.circular(50.adaptSize),
+                    imagePath: e.imagePath,
+                    height: h,
+                    width: w,
+                    alignment: Alignment.center,
+                  ),
                 ));
           }),
         ]);
+  }
+
+  _onHold(TreeObject object) {
+    setState(() {
+      _isDragging = true;
+      draggingObject = object;
+    });
+  }
+
+  _onDrag(DragUpdateDetails details) {
+    print("a");
+    setState(() {
+      draggingObject!.x += details.delta.dx;
+      draggingObject!.y += details.delta.dy;
+    });
   }
 }
