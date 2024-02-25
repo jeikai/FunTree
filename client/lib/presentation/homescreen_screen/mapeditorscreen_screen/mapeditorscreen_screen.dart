@@ -1,4 +1,5 @@
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:funtree/core/app_export.dart';
@@ -231,7 +232,9 @@ class METreeSelectorState extends State<METreeSelector> {
       if (isPlaced(i)) continue;
       list.add(treeList[i]);
     }
+    final bool temp = list.length % 2 == 0;
     return Container(
+
         color: appTheme.green100,
         child: CarouselSlider.builder(
           options: CarouselOptions(
@@ -239,13 +242,15 @@ class METreeSelectorState extends State<METreeSelector> {
               viewportFraction: 0.7,
               height: 145.v,
               enlargeFactor: 0.3),
-          itemCount: (list.length / 2).round(),
+          itemCount: (list.length / 2).round() + (temp ? 1 : 0),
           itemBuilder: (context, index, realIdx) {
             final int first = index * 2;
             final int second = first + 1;
+            final List<int> _ = [first,second];
             return Row(
-              children: [first, second].map((idx) {
+              children: _.map((idx) {
                 if (idx >= list.length) {
+                  if(idx == second) return Expanded(child: SizedBox(), flex: 1,);
                   return Expanded(flex: 1,
                     child: Center(
                         child: Container(
@@ -317,11 +322,16 @@ ValueNotifier<bool?> _isPlaced = ValueNotifier(null);
 class _MainEditorState extends State<MainEditor> {
   int? get index => _isPlaced.value == null || _isPlaced.value! ? null : widget.index;
 
+  bool get _isEditing {
+    return index != null || _isDragging;
+  }
+
   bool _isDragging = false;
   TreeObject? draggingObject;
 
   @override
   Widget build(BuildContext context) {
+    print("$_isDragging");
     print('build main editor: _isPlaced = $_isPlaced');
     return SizedBox(
       height: 400.v,
@@ -329,12 +339,14 @@ class _MainEditorState extends State<MainEditor> {
       child: Builder(
         builder: (BuildContext context) {
           final Widget child = _buildMap(context);
-          return index == null
-              ? child
-              : GestureDetector(
-                  child: child,
-                  onTapDown: onPlaceTree,
-                );
+          return GestureDetector(
+            key: Key("editor-map-detector"),
+            behavior: HitTestBehavior.opaque,
+            child: child,
+            onTapDown: _isDragging ? null : onPlaceTree,
+            onPanUpdate: _isDragging ? _onDrag : null ,
+            onPanEnd: _isDragging ? (details) => setState(() {_isDragging = false; print("a1");}) : null,
+          );
         },
       ),
     );
@@ -351,28 +363,31 @@ class _MainEditorState extends State<MainEditor> {
     });
   }
 
+  GlobalKey _key = GlobalKey();
+
   _buildMap(BuildContext context) {
     TreeMap map = maps[mapIndex];
     return Stack(
         key: Key("editor-map"),
         alignment: Alignment.topRight,
         children: [
-          CustomImageView(
-              imagePath: ImageConstant.imgBedroom,
-              height: 400.v,
-              width: 300.h,
-              alignment: Alignment.bottomCenter),
+          IgnorePointer(
+            ignoring: true,
+            child: CustomImageView(
+                imagePath: ImageConstant.imgBedroom,
+                height: 400.v,
+                width: 300.h,
+                alignment: Alignment.bottomCenter),
+          ),
           ...map.treeObjects.map((e) {
-            var w = _isDragging? e.width * 1.5 : e.width;
-            var h = _isDragging? e.height * 1.5 : e.height;
+            var w = _isDragging && e == draggingObject ? e.width * 3 : e.width;
+            var h = _isDragging && e == draggingObject ? e.height * 3 : e.height;
             return Positioned(
                 left: e.x - w / 2,
                 top: e.y - h / 2,
                 child: GestureDetector(
-                  onLongPress: _isDragging ? null : () => _onHold(e),
-                  onPanUpdate: _isDragging ? _onDrag : null,
-                  onLongPressEnd: (details) => setState(() => _isDragging = false),
-                  onPanEnd: (details) => setState(() => _isDragging = false),
+                  behavior: HitTestBehavior.translucent,
+                  onLongPressStart: (details) => _onHold(e),
                   child: CustomImageView(
                     border: Border.all(),
                     radius: BorderRadius.circular(50.adaptSize),
@@ -387,6 +402,7 @@ class _MainEditorState extends State<MainEditor> {
   }
 
   _onHold(TreeObject object) {
+    print("hold");
     setState(() {
       _isDragging = true;
       draggingObject = object;
@@ -396,8 +412,8 @@ class _MainEditorState extends State<MainEditor> {
   _onDrag(DragUpdateDetails details) {
     print("a");
     setState(() {
-      draggingObject!.x += details.delta.dx;
-      draggingObject!.y += details.delta.dy;
+      draggingObject!.x = details.localPosition.dx;
+      draggingObject!.y = details.localPosition.dy;
     });
   }
 }
