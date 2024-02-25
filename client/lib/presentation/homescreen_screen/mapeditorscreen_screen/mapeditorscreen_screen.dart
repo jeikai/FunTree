@@ -361,8 +361,8 @@ class _MainEditorState extends State<MainEditor> {
               alignment: Alignment.bottomCenter),
           ...map.treeObjects.map((e) {
             return Positioned(
-                left: e.x.h,
-                top: e.y.v,
+                left: e.x - e.width / 2,
+                top: e.y - e.height / 2,
                 child: CustomImageView(
                   border: Border.all(),
                   radius: BorderRadius.circular(50.adaptSize),
