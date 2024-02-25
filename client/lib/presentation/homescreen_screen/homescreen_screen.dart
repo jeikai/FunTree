@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:funtree/backend/backend.dart';
 import 'package:funtree/core/app_export.dart';
 import 'package:funtree/presentation/chattingscreen_screen/chattingscreen_screen.dart';
 import 'package:funtree/presentation/communityscreen_screen/communityscreen_screen.dart';
@@ -7,10 +8,10 @@ import 'package:funtree/widgets/custom_bottom_app_bar.dart';
 import 'package:funtree/widgets/custom_floating_button.dart';
 import 'package:funtree/widgets/home_screen/community.dart';
 import 'package:funtree/widgets/home_screen/shop.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:funtree/widgets/custom_search_view.dart';
 import 'package:funtree/widgets/home_screen/home_map.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 
 class HomescreenScreen extends StatefulWidget {
   const HomescreenScreen({super.key});
@@ -96,6 +97,7 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
     await getWeather();
     setState(() {
       isLoading = false;
+      mainWidget = getCurrentPage(cr);
     });
   }
 
@@ -109,7 +111,6 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
     return Center(
       child: CircularProgressIndicator(),
     );
-    mainWidget = getCurrentPage(cr);
   }
 
   @override
@@ -183,11 +184,11 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
                                   text: TextSpan(children: [
                                     TextSpan(
                                         text:
-                                            "Address: Hanoi\nTemperature: 29° AQI: ",
+                                            "Address: Hanoi\n",
                                         style:
                                             CustomTextStyles.bodySmallffffffff),
                                     TextSpan(
-                                        text: "AQI: ${AQI.toString()}\n",
+                                        text: "AQI: ${AQI}\n",
                                         style:
                                             CustomTextStyles.bodySmallffffffff),
                                     TextSpan(
@@ -290,12 +291,11 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
               SizedBox(height: 5.v),
               Container(
                   height: 675.v,
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 13.h, vertical: 13.v),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 13.h, vertical: 13.v),
                   decoration: AppDecoration.fillGreen.copyWith(
                       borderRadius: BorderRadiusStyle.customBorderTL30),
-                  child:
-                  Column(mainAxisSize: MainAxisSize.min, children: [
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
                     CustomSearchView(
                         controller: searchController,
                         hintText: "Search my plants"),
@@ -310,12 +310,11 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
               SizedBox(height: 5.v),
               Container(
                   height: 675.v,
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 13.h, vertical: 13.v),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 13.h, vertical: 13.v),
                   decoration: AppDecoration.fillGreen.copyWith(
                       borderRadius: BorderRadiusStyle.customBorderTL30),
-                  child:
-                  Column(mainAxisSize: MainAxisSize.min, children: [
+                  child: Column(mainAxisSize: MainAxisSize.min, children: [
                     CustomSearchView(
                         controller: searchController,
                         hintText: "Search my plants"),
