@@ -27,15 +27,101 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
   TextEditingController searchController = TextEditingController();
 
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+  double latitude = 0.0;
+  double longitude = 0.0;
+  int AQI = 0;
+  int humidity = 0;
+  double wind = 0.00;
+  double temp = 0.0;
+  String currentAddress = "";
+  bool isLoading = true;
+
+  Future<void> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      print('Location services are disabled.');
+      return;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        print('Location permissions are denied');
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      print(
+          'Location permissions are permanently denied, we cannot request permissions.');
+      return;
+    }
+    Position position = await Geolocator.getCurrentPosition();
+    latitude = position.latitude;
+    longitude = position.longitude;
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(52.2165157, 6.9437819);
+    print(placemarks[0]);
+    Placemark place = placemarks[0];
+    currentAddress = "${place.locality}, ${place.country}";
+  }
+
+  Future<void> getWeather() async {
+    try {
+      final api = Api();
+      final response =
+          await api.getData("weather/current?lat=${latitude}&lng=${longitude}");
+      if (response != null) {
+        print(response["data"]["airQuality"]["aqi"]);
+        print(response["data"]["weather"]);
+        AQI = response["data"]["airQuality"]["aqi"];
+        humidity = response["data"]["weather"]["humidity"];
+        wind = response["data"]["weather"]["wind_speed"];
+        temp = response["data"]["weather"]["temp"];
+        print(AQI);
+      } else {
+        print("Failed to fetch weather data: Response is null.");
+      }
+    } catch (e) {
+      print("An error occurred while fetching weather data: $e");
+    }
+  }
+
+  Future<void> _fetchData() async {
+    await _determinePosition();
+    await getWeather();
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    _fetchData();
+  }
+
+  Widget _buildLoadingScreen() {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
     mainWidget = getCurrentPage(cr);
   }
 
   @override
   Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        body: isLoading ? _buildLoadingScreen() : _buildMainScreen(),
+      ),
+    );
+  }
+
+  Widget _buildMainScreen() {
     return SafeArea(
         child: Scaffold(
             extendBody: true,
@@ -101,10 +187,17 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
                                         style:
                                             CustomTextStyles.bodySmallffffffff),
                                     TextSpan(
-                                        text:
-                                            "112 Humidity: 95%\nWind: 13 km/h",
+                                        text: "AQI: ${AQI.toString()}\n",
                                         style:
-                                            CustomTextStyles.bodySmallffff9b57)
+                                            CustomTextStyles.bodySmallffffffff),
+                                    TextSpan(
+                                        text: "Humidity: ${humidity} %\n",
+                                        style:
+                                            CustomTextStyles.bodySmallffffffff),
+                                    TextSpan(
+                                        text: "Wind: ${wind} km/h",
+                                        style:
+                                            CustomTextStyles.bodySmallffffffff),
                                   ]),
                                   textAlign: TextAlign.left))
                         ]))
