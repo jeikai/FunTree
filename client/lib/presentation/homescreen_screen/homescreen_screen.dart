@@ -245,6 +245,6 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
   }
 
   onTapBedroom(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.caredetailscreenPage);
+    Navigator.pushReplacementNamed(context, AppRoutes.caredetailscreenPage);
   }
 }
