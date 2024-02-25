@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:funtree/core/app_export.dart';
-import 'package:funtree/presentation/chattingscreen_screen/chattingscreen_screen.dart';
-import 'package:funtree/presentation/communityscreen_screen/communityscreen_screen.dart';
-import 'package:funtree/presentation/shoppingscreen_page/shoppingscreen_page.dart';
 import 'package:funtree/widgets/custom_bottom_app_bar.dart';
 import 'package:funtree/widgets/custom_floating_button.dart';
 import 'package:funtree/widgets/home_screen/community.dart';
 import 'package:funtree/widgets/home_screen/shop.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:funtree/widgets/custom_search_view.dart';
 import 'package:funtree/widgets/home_screen/home_map.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+
+import '../../backend/backend.dart';
 
 class HomescreenScreen extends StatefulWidget {
   const HomescreenScreen({super.key});
@@ -18,6 +18,19 @@ class HomescreenScreen extends StatefulWidget {
   @override
   State<HomescreenScreen> createState() => _HomescreenScreenState();
 }
+
+double latitude = 0.0;
+double longitude = 0.0;
+int AQI = 0;
+int humidity = 0;
+double wind = 0.00;
+double temp = 0.0;
+
+bool isWeatherFetched = false;
+
+String currentAddress = "";
+
+bool isCurrentAddressFetched = false;
 
 class _HomescreenScreenState extends State<HomescreenScreen> {
   late Widget mainWidget;
@@ -27,16 +40,12 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
   TextEditingController searchController = TextEditingController();
 
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
-  double latitude = 0.0;
-  double longitude = 0.0;
-  int AQI = 0;
-  int humidity = 0;
-  double wind = 0.00;
-  double temp = 0.0;
-  String currentAddress = "";
   bool isLoading = true;
 
   Future<void> _determinePosition() async {
+    if(currentAddress != "") {
+      return;
+    }
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -68,9 +77,13 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
     print(placemarks[0]);
     Placemark place = placemarks[0];
     currentAddress = "${place.locality}, ${place.country}";
+    isCurrentAddressFetched = true;
   }
 
   Future<void> getWeather() async {
+    if(AQI != 0 && humidity != 0 && wind != 0.00 && temp != 0.0) {
+      return;
+    }
     try {
       final api = Api();
       final response =
@@ -83,6 +96,7 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
         wind = response["data"]["weather"]["wind_speed"];
         temp = response["data"]["weather"]["temp"];
         print(AQI);
+        isWeatherFetched = true;
       } else {
         print("Failed to fetch weather data: Response is null.");
       }
@@ -103,13 +117,13 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
   void initState() {
     super.initState();
     _fetchData();
+    mainWidget = getCurrentPage(cr);
   }
 
   Widget _buildLoadingScreen() {
     return Center(
       child: CircularProgressIndicator(),
     );
-    mainWidget = getCurrentPage(cr);
   }
 
   @override
