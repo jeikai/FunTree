@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:funtree/backend/backend.dart';
 import 'package:funtree/core/app_export.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 
 // ignore_for_file: must_be_immutable
 class RemiderdetailscreenPage extends StatefulWidget {
@@ -16,37 +19,127 @@ class RemiderdetailscreenPageState extends State<RemiderdetailscreenPage>
     with AutomaticKeepAliveClientMixin<RemiderdetailscreenPage> {
   @override
   bool get wantKeepAlive => true;
+
+  double latitude = 0.0;
+  double longitude = 0.0;
+  int AQI = 0;
+  int humidity = 0;
+  double wind = 0.00;
+  double temp = 0.0;
+  String currentAddress = "";
+  bool isLoading = true;
+  String recommendation = "";
+  Future<void> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      print('Location services are disabled.');
+      return;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        print('Location permissions are denied');
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      print(
+          'Location permissions are permanently denied, we cannot request permissions.');
+      return;
+    }
+    Position position = await Geolocator.getCurrentPosition();
+    latitude = position.latitude;
+    longitude = position.longitude;
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(52.2165157, 6.9437819);
+    print(placemarks[0]);
+    Placemark place = placemarks[0];
+    currentAddress = "${place.locality}, ${place.country}";
+  }
+
+  Future<void> getWeather() async {
+    try {
+      final api = Api();
+      final response =
+          await api.getData("weather/current?lat=${latitude}&lng=${longitude}");
+      if (response != null) {
+        print(response["data"]["airQuality"]["healthRecommendations"]);
+        print(response["data"]["weather"]);
+        AQI = response["data"]["airQuality"]["aqi"];
+        humidity = response["data"]["weather"]["humidity"];
+        wind = response["data"]["weather"]["wind_speed"];
+        temp = response["data"]["weather"]["temp"];
+        recommendation = response["data"]["airQuality"]["healthRecommendations"]["generalPopulation"];
+        print(AQI);
+      } else {
+        print("Failed to fetch weather data: Response is null.");
+      }
+    } catch (e) {
+      print("An error occurred while fetching weather data: $e");
+    }
+  }
+
+  Future<void> _fetchData() async {
+    await _determinePosition();
+    await getWeather();
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchData();
+  }
+  Widget _buildLoadingScreen() {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
   @override
   Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        body: isLoading ? _buildLoadingScreen() : _buildMainScreen(),
+      ),
+    );
+  }
+  Widget _buildMainScreen() {
     return SafeArea(
       child: Scaffold(
         body: Container(
           width: double.maxFinite,
           decoration: AppDecoration.fillGreen,
           child: ClipRRect(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(height: 21.v),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 21.h),
-                    child: Column(
-                      children: [
-                        _buildWeatherSection(context),
-                        SizedBox(height: 13.v),
-                        _buildFunTreeSection(context),
-                        SizedBox(height: 13.v),
-                      ],
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(height: 22.v),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 21.h),
+                      child: Column(
+                        children: [
+                          _buildWeatherSection(context),
+                          SizedBox(height: 13.v),
+                          _buildFunTreeSection(context),
+                          SizedBox(height: 13.v),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(60.h),
-              topRight: Radius.circular(60.h),
-            )
-          ),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(60.h),
+                topRight: Radius.circular(60.h),
+              )),
         ),
       ),
     );
@@ -99,13 +192,22 @@ class RemiderdetailscreenPageState extends State<RemiderdetailscreenPage>
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: "Temperature: 29° AQI: ",
-                        style: CustomTextStyles.bodySmallff445d48,
-                      ),
+                          text:
+                          "Address: Hanoi\n",
+                          style:
+                          CustomTextStyles.bodySmallff445d48),
                       TextSpan(
-                        text: "112 Humidity: 95%\nWind: 13 km/h",
-                        style: CustomTextStyles.bodySmallffff9b57,
-                      ),
+                          text: "AQI: ${AQI}\n",
+                          style:
+                          CustomTextStyles.bodySmallff445d48),
+                      TextSpan(
+                          text: "Humidity: ${humidity} %\n",
+                          style:
+                          CustomTextStyles.bodySmallff445d48),
+                      TextSpan(
+                          text: "Wind: ${wind} km/h",
+                          style:
+                          CustomTextStyles.bodySmallff445d48),
                     ],
                   ),
                   textAlign: TextAlign.left,
@@ -154,7 +256,7 @@ class RemiderdetailscreenPageState extends State<RemiderdetailscreenPage>
           ),
           SizedBox(height: 7.v),
           SizedBox(
-            width: 303.h,
+            width: 400.h,
             child: RichText(
               text: TextSpan(
                 children: [
@@ -164,8 +266,8 @@ class RemiderdetailscreenPageState extends State<RemiderdetailscreenPage>
                   ),
                   TextSpan(
                     text:
-                        "Bad for health Air Quality:\nAn AQI of 112 indicates \"unhealthy\" air quality,\n so it's advisable to limit opening windows to \nprevent dust and pollutants from entering the \nroom.Use an air purifier to improve air quality \nindoors.Grow additional indoor plants with air \npurifying capabilities.\nHumidity:\nA humidity level of 95% is relatively high and \ncan cause discomfort and health issues. It's \nrecommended to use a dehumidifier to reduce \nhumidity levels indoors.Open windows during \nsunny weather to ventilate the room.Avoid \ndrying clothes indoors in the bedroom.",
-                    style: CustomTextStyles.titleLargeffff9b57,
+                        "${recommendation}",
+                    style: CustomTextStyles.titleLargeff445d48,
                   ),
                 ],
               ),
