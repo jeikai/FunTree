@@ -26,6 +26,7 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
   double wind = 0.0;
   double temp = 0.0;
   String currentAddress = "";
+  bool isLoading = true;
 
   Future<void> _determinePosition() async {
     bool serviceEnabled;
@@ -60,10 +61,12 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
     Placemark place = placemarks[0];
     currentAddress = "${place.locality}, ${place.country}";
   }
+
   Future<void> getWeather() async {
     try {
       final api = Api();
-      final response = await api.getData("weather/current?lat=${latitude}&lng=${longitude}");
+      final response =
+          await api.getData("weather/current?lat=${latitude}&lng=${longitude}");
       if (response != null) {
         print(response["data"]["airQuality"]["aqi"]);
         print(response["data"]["weather"]);
@@ -79,16 +82,37 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
     }
   }
 
+  Future<void> _fetchData() async {
+    await _determinePosition().then((_) {
+       getWeather();
+    });
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   void initState() {
-    _determinePosition().then((_) {
-      getWeather();
-    });
     super.initState();
+    _fetchData();
+  }
+
+  Widget _buildLoadingScreen() {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        body: isLoading ? _buildLoadingScreen() : _buildMainScreen(),
+      ),
+    );
+  }
+
+  Widget _buildMainScreen() {
     return SafeArea(
         child: Scaffold(
             extendBody: true,
@@ -226,20 +250,17 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
                                         style:
                                             CustomTextStyles.bodySmallffffffff),
                                     TextSpan(
-                                        text:
-                                        "AQI: ${AQI.toString()}\n",
+                                        text: "AQI: ${AQI.toString()}\n",
                                         style:
-                                        CustomTextStyles.bodySmallffffffff),
+                                            CustomTextStyles.bodySmallffffffff),
                                     TextSpan(
-                                        text:
-                                        "Humidity: ${humidity} %\n",
+                                        text: "Humidity: ${humidity} %\n",
                                         style:
-                                        CustomTextStyles.bodySmallffffffff),
+                                            CustomTextStyles.bodySmallffffffff),
                                     TextSpan(
-                                        text:
-                                        "Wind: ${wind} km/h",
+                                        text: "Wind: ${wind} km/h",
                                         style:
-                                        CustomTextStyles.bodySmallffffffff),
+                                            CustomTextStyles.bodySmallffffffff),
                                   ]),
                                   textAlign: TextAlign.left))
                         ]))
