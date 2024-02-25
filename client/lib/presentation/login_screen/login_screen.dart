@@ -20,8 +20,8 @@ class LoginScreen extends StatelessWidget {
             resizeToAvoidBottomInset: false,
             body: Container(
                 constraints: BoxConstraints(
-                    maxHeight: SizeUtils.height,
-                    maxWidth: SizeUtils.width,
+                  maxHeight: SizeUtils.height,
+                  maxWidth: SizeUtils.width,
                 ),
                 decoration: BoxDecoration(
                     image: DecorationImage(
@@ -41,7 +41,7 @@ class LoginScreen extends StatelessWidget {
                       SizedBox(height: 40.v),
                       Container(
                           padding: EdgeInsets.symmetric(
-                              horizontal: 27.h, vertical: 27.v),
+                              horizontal: 27.h, vertical: 29.v),
                           decoration: AppDecoration.fillOnError.copyWith(
                               borderRadius: BorderRadiusStyle.customBorderTL30),
                           child: Column(
@@ -124,7 +124,6 @@ class LoginScreen extends StatelessWidget {
                     ])))));
   }
 
-  /// Navigates to the homescreenScreen when the action is triggered.
   onTapLogin(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.homescreenScreen);
   }
