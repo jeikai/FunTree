@@ -16,39 +16,45 @@ class CamerascreenScreen extends StatefulWidget {
 
 class _CamerascreenScreenState extends State<CamerascreenScreen> {
   bool isFlashOn = false;
-  late CameraController controller;
+  CameraController? controller;
   late List<CameraDescription> _cameras;
+
   Future<void> initCamera() async {
     _cameras = await availableCameras();
   }
+
   @override
   void initState() {
     super.initState();
-    initCamera();
-    controller = CameraController(_cameras[0], ResolutionPreset.max);
-    controller.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {});
-    }).catchError((Object e) {
-      if (e is CameraException) {
-        switch (e.code) {
-          case 'CameraAccessDenied':
-          // Handle access errors here.
-            break;
-          default:
-          // Handle other errors here.
-            break;
+    initCamera().then((value) async {
+      controller = CameraController(_cameras[0], ResolutionPreset.max);
+      await controller!.initialize().then((_) {
+        if (!mounted) {
+          return;
         }
-      }
+        setState(() {});
+      }).catchError((Object e) {
+        if (e is CameraException) {
+          switch (e.code) {
+            case 'CameraAccessDenied':
+            // Handle access errors here.
+              break;
+            default:
+            // Handle other errors here.
+              break;
+          }
+        }
+      });
     });
+    ;
   }
+
   @override
   void dispose() {
-    controller.dispose();
+    controller!.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -56,8 +62,24 @@ class _CamerascreenScreenState extends State<CamerascreenScreen> {
         extendBody: true,
         extendBodyBehindAppBar: true,
         appBar: _buildAppBar(context),
-        body: MaterialApp(
-          home: CameraPreview(controller),
+        body: Material(
+          child: controller == null
+              ? Center(
+            child: CircularProgressIndicator(),
+          )
+              : Stack(
+            children: [
+              SizedBox(
+                height: 800.v,
+                width: 360.h,
+                child: CameraPreview(controller!),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: _buildFiftySix(context),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -91,35 +113,29 @@ class _CamerascreenScreenState extends State<CamerascreenScreen> {
 
   /// Section Widget
   Widget _buildFiftySix(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.only(left: 2.h),
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
+    return Container(
+        height: 180.v,
+        child: Stack(
             children: [
-              CustomImageView(
-                  imagePath: ImageConstant.imgPicShop44,
-                  height: 40.v,
-                  width: 50.h,
-                  margin: EdgeInsets.only(top: 53.v)),
-              Spacer(flex: 46),
-              Padding(
-                  padding: EdgeInsets.only(bottom: 13.v),
-                  child: CustomIconButton(
+              Center(
+                  child:CustomIconButton(
                       height: 80.adaptSize,
                       width: 80.adaptSize,
                       padding: EdgeInsets.all(19.h),
                       child: CustomImageView(
-                          imagePath: ImageConstant.imgSearch80x80))),
-              Spacer(flex: 53),
-              Padding(
-                  padding: EdgeInsets.only(top: 53.v),
-                  child: CustomIconButton(
-                      height: 40.adaptSize,
-                      width: 40.adaptSize,
-                      padding: EdgeInsets.all(10.h),
-                      child:
-                      CustomImageView(imagePath: ImageConstant.imgGroup6)))
+                          imagePath: ImageConstant.imgSearch80x80))
+              ),
+              Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                      padding: EdgeInsets.only(bottom: 10.adaptSize, right: 10.adaptSize),
+                      child: CustomIconButton(
+                          height: 40.adaptSize,
+                          width: 40.adaptSize,
+                          padding: EdgeInsets.all(10.h),
+                          child:
+                          CustomImageView(imagePath: ImageConstant.imgGroup6)))
+              )
             ]));
   }
 

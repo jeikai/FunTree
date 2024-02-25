@@ -8,7 +8,6 @@ import { getLatAndLng } from '../utils/utils.js';
 const getCurrentWeatherData = async (req, res) => {
 	const { lat, lng } = req.query; 
 	try {
-		console.log(`lat: ${lat}, lng: ${lng}`);
 		const weather = await axios.get(OPEN_WEATHER_URL, {
 			headers: {
 				'Content-Type': 'application/json',
