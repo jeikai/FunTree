@@ -21,9 +21,9 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
   double latitude = 0.0;
   double longitude = 0.0;
-  double AQI = 0.0;
-  double humidity = 0.0;
-  double wind = 0.0;
+  int AQI = 0;
+  int humidity = 0;
+  double wind = 0.00;
   double temp = 0.0;
   String currentAddress = "";
   bool isLoading = true;
@@ -74,6 +74,7 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
         humidity = response["data"]["weather"]["humidity"];
         wind = response["data"]["weather"]["wind_speed"];
         temp = response["data"]["weather"]["temp"];
+        print(AQI);
       } else {
         print("Failed to fetch weather data: Response is null.");
       }
@@ -83,9 +84,8 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
   }
 
   Future<void> _fetchData() async {
-    await _determinePosition().then((_) {
-       getWeather();
-    });
+    await _determinePosition();
+    await getWeather();
     setState(() {
       isLoading = false;
     });
