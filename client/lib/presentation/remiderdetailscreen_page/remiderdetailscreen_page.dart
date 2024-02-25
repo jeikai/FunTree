@@ -22,21 +22,30 @@ class RemiderdetailscreenPageState extends State<RemiderdetailscreenPage>
       child: Scaffold(
         body: Container(
           width: double.maxFinite,
-          decoration: AppDecoration.fillOnError1,
-          child: Column(
-            children: [
-              SizedBox(height: 21.v),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 21.h),
-                child: Column(
-                  children: [
-                    _buildWeatherSection(context),
-                    SizedBox(height: 13.v),
-                    _buildFunTreeSection(context),
-                  ],
-                ),
+          decoration: AppDecoration.fillGreen,
+          child: ClipRRect(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 21.v),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 21.h),
+                    child: Column(
+                      children: [
+                        _buildWeatherSection(context),
+                        SizedBox(height: 13.v),
+                        _buildFunTreeSection(context),
+                        SizedBox(height: 13.v),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(60.h),
+              topRight: Radius.circular(60.h),
+            )
           ),
         ),
       ),

@@ -28,7 +28,7 @@ class CaredetailscreenPageState extends State<CaredetailscreenPage>
         resizeToAvoidBottomInset: false,
         body: Container(
           width: double.maxFinite,
-          decoration: AppDecoration.fillOnError1,
+          decoration: AppDecoration.fillGreen,
           child: Column(
             children: [
               SizedBox(height: 19.v),

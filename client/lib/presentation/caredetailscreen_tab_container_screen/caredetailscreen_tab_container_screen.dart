@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:funtree/core/app_export.dart';
 import 'package:funtree/presentation/caredetailscreen_page/caredetailscreen_page.dart';
+import 'package:funtree/presentation/remiderdetailscreen_page/remiderdetailscreen_page.dart';
 import 'package:funtree/widgets/app_bar/appbar_leading_image.dart';
 import 'package:funtree/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:funtree/widgets/app_bar/custom_app_bar.dart';
+
+int treeIndex = 0;
 
 class CaredetailscreenTabContainerScreen extends StatefulWidget {
   const CaredetailscreenTabContainerScreen({Key? key}) : super(key: key);
@@ -42,6 +45,7 @@ class CaredetailscreenTabContainerScreenState
                           child:
                               Column(mainAxisSize: MainAxisSize.min, children: [
                             Container(
+                              margin: EdgeInsets.all(5.adaptSize),
                                 height: 21.v,
                                 width: 278.h,
                                 decoration: BoxDecoration(
@@ -73,14 +77,17 @@ class CaredetailscreenTabContainerScreenState
                                     ])),
                             SizedBox(
                                 height: 438.v,
-                                child: TabBarView(
-                                    controller: tabviewController,
-                                    children: [
-                                      CaredetailscreenPage(),
-                                      CaredetailscreenPage(),
-                                      CaredetailscreenPage(),
-                                      CaredetailscreenPage()
-                                    ]))
+                                child: ColoredBox(
+                                    color: appTheme.green50,
+                                    child: TabBarView(
+                                        controller: tabviewController,
+                                        children: [
+                                          CaredetailscreenPage(),
+                                          CaredetailscreenPage(),
+                                          CaredetailscreenPage(),
+                                          RemiderdetailscreenPage()
+                                        ]
+                                )))
                           ])))
                 ]))));
   }
@@ -94,6 +101,7 @@ class CaredetailscreenTabContainerScreenState
             width: double.maxFinite,
             child: Stack(alignment: Alignment.topCenter, children: [
               CustomImageView(
+                fit: BoxFit.cover,
                   imagePath: ImageConstant.imgPicShop45,
                   height: 367.v,
                   width: 360.h,
@@ -118,9 +126,26 @@ class CaredetailscreenTabContainerScreenState
                                   imagePath: ImageConstant.imgCreate,
                                   margin: EdgeInsets.symmetric(horizontal: 7.h))
                             ]),
-                        SizedBox(height: 250.v),
-                        Text("Cactus", style: theme.textTheme.headlineLarge)
-                      ])))
+                      ]))),
+              Align(
+                alignment: Alignment(0.0, 0.4),
+                  child: Padding(
+                      padding: EdgeInsets.only(bottom: 5.v),
+                      child: Stack(
+                        children: [
+                          Text("Cactus", style: theme.textTheme.headlineLarge?.copyWith(
+                            fontSize: 60.adaptSize,
+                            foreground: Paint()
+                              ..style = PaintingStyle.stroke
+                              ..strokeWidth = 5.adaptSize
+                              ..color = Colors.green[700]!,
+                          )),
+                          Text("Cactus", style: theme.textTheme.headlineLarge?.copyWith(
+                            fontSize: 60.adaptSize,
+                          ))
+                        ],
+                      ))
+              )
             ])));
   }
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:funtree/core/map/map.dart';
 import 'package:funtree/core/utils/size_utils.dart';
+import 'package:funtree/presentation/caredetailscreen_tab_container_screen/caredetailscreen_tab_container_screen.dart';
 import 'package:funtree/presentation/homescreen_screen/mapeditorscreen_screen/mapeditorscreen_screen.dart';
 import 'package:funtree/routes/app_routes.dart';
 import 'package:funtree/theme/custom_text_style.dart';
@@ -77,6 +78,7 @@ class HomeMapState extends State<HomeMap> {
             )),
         SizedBox(height: 13.v),
         _buildNavBar(context),
+        SizedBox(height: 13.v),
       ],
     );
   }
@@ -91,8 +93,9 @@ class HomeMapState extends State<HomeMap> {
     }
   }
 
-  _onTapTree(BuildContext context, treeIndex) {
-    Navigator.pushNamed(context, AppRoutes.caredetailscreenPage);
+  _onTapTree(BuildContext context, tid) {
+    treeIndex = tid;
+    Navigator.pushNamed(context, AppRoutes.caredetailscreenTabContainerScreen);
   }
 
   _createMap(BuildContext context) {
