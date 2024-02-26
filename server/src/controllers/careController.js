@@ -59,33 +59,29 @@ const fertilizerEfficiency = (plantName, temperature) => {
 	return efficiency;
 };
 export const getFertilizingData = async (req, res) => {
-	const {
-		temperature: T,
-		aqi: A,
-		plant_name: C,
-	} = await req.query;
-
+	const { temperature: T, aqi: A, plant_name: C } = await req.query;
+	let N;
 	switch (C) {
 		case 'Tomato':
-			N = data[0];
+			N = 0.2;
 			break;
 		case 'Garden Tomato':
-			N = data[0];
+			N = 0.2;
 			break;
 		case 'Cucumber':
-			N = data[1];
+			N = 0.3;
 			break;
 		case 'Bell Pepper':
-			N = data[2];
+			N = 0.4;
 			break;
 		case 'Lettuce':
-			N = data[3];
+			N = 0.1;
 			break;
 		case 'Snake Plant':
-			N = data[4];
+			N = 0.2;
 			break;
 		default:
-			const N = 0;
+			N = 0;
 
 			break;
 	}

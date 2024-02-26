@@ -26,6 +26,7 @@ export const identifyPlant = async (req, res) => {
 		})
 	);
 	const { location } = await req.body;
+	console.log(location);
 	const { lat, lng } = await getLatAndLng(location);
 
 	try {
