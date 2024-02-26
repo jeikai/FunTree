@@ -9,9 +9,23 @@ import {
 import { normalizeString } from '../utils/utils.js';
 import Plant from '@/model/Plant.js';
 import { getLatAndLng } from '../utils/utils.js';
+import sharp from 'sharp';
 export const identifyPlant = async (req, res) => {
 	//! Plant image must be a base64 string
-	const { images, location } = await req.body;
+	const imgs = await req.files;
+
+	const images = await Promise.all(
+		imgs.map(async (img) => {
+			const res = sharp(img.path)
+				.toBuffer()
+				.then((data) => {
+					return data.toString('base64');
+				});
+
+			return res;
+		})
+	);
+	const { location } = await req.body;
 	const { lat, lng } = await getLatAndLng(location);
 
 	try {
@@ -26,6 +40,7 @@ export const identifyPlant = async (req, res) => {
 				headers: {
 					'Content-Type': 'application/json',
 					'Api-Key': process.env.PLANT_ID_API_KEY,
+					'Accept-Encoding': 'gzip', // Enable gzip compression
 				},
 				params: {
 					details:
@@ -84,7 +99,7 @@ export const identifyPlant = async (req, res) => {
 	} catch (error) {
 		return res.status(500).json({
 			status: false,
-			message: error.message,
+			message: error,
 		});
 	}
 };
