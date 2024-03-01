@@ -50,10 +50,10 @@ export const identifyPlant = async (req, res) => {
 		const isPlant = result.is_plant.binary;
 
 		if (isPlant) {
-			await storage().bucket('fun_tree_plants').upload(image.path, {
+			const upload = await storage().bucket('fun_tree_plants').upload(image.path, {
 				destination: image.originalname,
 			});
-
+			const bucketBaseURL = `https://storage.googleapis.com/fun_tree_plants`;
 			const plantInfo = result.classification.suggestions[0];
 
 			const healthAssessment = await axios.post(
@@ -91,6 +91,7 @@ export const identifyPlant = async (req, res) => {
 					max: plantInfo.details.watering.max,
 					min: plantInfo.details.watering.min,
 				},
+				image: `${input.images[0]}`,
 			};
 
 			const newPlant = await Plant.addNewPlant(data);
