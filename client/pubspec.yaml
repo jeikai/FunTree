@@ -18,6 +18,9 @@ dependencies:
   camera: ^0.10.5+9
   geolocator: ^11.0.0
   geocoding: ^2.2.0
+  flutter_custom_clippers: ^2.1.0
+  custom_clippers:
+  velocity_x:
 dev_dependencies: 
   flutter_test: 
     sdk: flutter

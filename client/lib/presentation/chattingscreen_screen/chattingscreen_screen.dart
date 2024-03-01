@@ -4,12 +4,25 @@ import 'package:funtree/widgets/app_bar/appbar_subtitle.dart';
 import 'package:funtree/widgets/app_bar/appbar_title_image.dart';
 import 'package:funtree/widgets/app_bar/custom_app_bar.dart';
 import 'package:funtree/widgets/custom_text_form_field.dart';
+import 'chatmessage.dart';
 
-// ignore_for_file: must_be_immutable
-class ChattingscreenScreen extends StatelessWidget {
-  ChattingscreenScreen({Key? key}) : super(key: key);
+class ChattingscreenScreen extends StatefulWidget {
+  const ChattingscreenScreen({super.key});
 
+  @override
+  State<ChattingscreenScreen> createState() => _ChattingscreenScreenState();
+}
+
+class _ChattingscreenScreenState extends State<ChattingscreenScreen> {
   TextEditingController messageController = TextEditingController();
+  final List<ChatMessage> _message = [];
+  final _formKey = GlobalKey<FormState>();
+  bool _isTyping = false;
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
