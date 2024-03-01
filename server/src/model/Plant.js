@@ -31,13 +31,21 @@ const plantSchema = new Schema({
 		min: Number,
 		max: Number,
 	},
+	image: {
+		type: String,
+		required: false,
+	},
 });
 
 const Plant = new mongoose.model('Plant', plantSchema);
 
 const addNewPlant = async (plantData) => {
 	const newPlant = new Plant(plantData);
-	await newPlant.save();
+	try {
+		await newPlant.save();
+	} catch (err) {
+		console.log(err);
+	}
 	return newPlant;
 };
 const deletePlant = async (plantId) => {
