@@ -31,6 +31,7 @@ const plantSchema = new Schema({
 		min: Number,
 		max: Number,
 	},
+	
 });
 
 const Plant = new mongoose.model('Plant', plantSchema);
