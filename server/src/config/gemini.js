@@ -1,14 +1,10 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-let geminiChat = null;
-try {
-	const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-	const gemini = genAI.getGenerativeModel({ model: 'gemini-pro' });
-	geminiChat = gemini.startChat({
-		history: [],
-	});
-	console.log('Init gemini success!');
-} catch (error) {
-	console.log('Error init gemini', error);
-	geminiChat = null;
-}
+import dotenv from 'dotenv';
+dotenv.config();
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+export const gemini = genAI.getGenerativeModel({ model: 'gemini-pro' });
+let geminiChat = gemini.startChat({
+    history: []
+});
+console.log('Init gemini success!');
 export default geminiChat;
