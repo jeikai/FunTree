@@ -6,21 +6,21 @@ import {
 } from '../config/const.js';
 import { getLatAndLng } from '../utils/utils.js';
 const getCurrentWeatherData = async (req, res) => {
-	const { lat, lng } = await getLatAndLng(req.query.location);
+	const { lat, lng } = req.query;
 	try {
 		const weather = await axios.get(OPEN_WEATHER_URL, {
 			headers: {
 				'Content-Type': 'application/json',
 			},
 			params: {
-				lat: lat,
+				lat: lat, 
 				lon: lng,
 				exclude: 'minutely,hourly,daily,alert',
 				units: 'metric',
 				appid: process.env.OPEN_WEATHER_API_KEY,
-			},
+			}, 
 		});
-		const { current } = await weather.data;
+		const { current } = await weather.data; 
 		const aqiRequest = axios.post(
 			GGMAP_AQI_URL,
 			{

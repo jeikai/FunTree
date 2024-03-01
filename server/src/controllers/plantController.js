@@ -25,9 +25,7 @@ export const identifyPlant = async (req, res) => {
 			return res;
 		})
 	);
-	const { location } = await req.body;
-	console.log(location);
-	const { lat, lng } = await getLatAndLng(location);
+	const { lat, lng } = req.body;
 
 	try {
 		const plantIdentification = await axios.post(
