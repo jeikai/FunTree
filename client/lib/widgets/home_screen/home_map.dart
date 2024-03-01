@@ -12,6 +12,8 @@ import 'package:funtree/theme/theme_helper.dart';
 import '../../core/utils/image_constant.dart';
 import '../custom_image_view.dart';
 
+Function resetMap= () {};
+
 class HomeMap extends StatefulWidget {
   HomeMap({Key? key}) : super(key: key);
 
@@ -55,6 +57,9 @@ class HomeMapState extends State<HomeMap> {
     };
     mapListenable = Listenable.merge(maps);
     mapListenable.addListener(mapListener);
+    resetMap = () {
+      setState(() {});
+    };
   }
 
   @override
@@ -135,6 +140,7 @@ class HomeMapState extends State<HomeMap> {
   }
 
   _buildNavBar(BuildContext context) {
+    print("a");
     var name = "New Map";
     return Row(
         mainAxisAlignment: MainAxisAlignment.center,

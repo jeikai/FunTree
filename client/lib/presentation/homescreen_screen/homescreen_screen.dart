@@ -85,9 +85,8 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
       return;
     }
     try {
-      final api = Api();
       final response =
-          await api.getData("weather/current?lat=${latitude}&lng=${longitude}");
+          await Api.getData("weather/current?lat=${latitude}&lng=${longitude}");
       if (response != null) {
         print(response["data"]["airQuality"]["aqi"]);
         print(response["data"]["weather"]);
@@ -351,6 +350,6 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
   }
 
   onTapBedroom(BuildContext context) {
-    Navigator.pushReplacementNamed(context, AppRoutes.caredetailscreenPage);
+    Navigator.pushNamed(context, AppRoutes.caredetailscreenPage);
   }
 }

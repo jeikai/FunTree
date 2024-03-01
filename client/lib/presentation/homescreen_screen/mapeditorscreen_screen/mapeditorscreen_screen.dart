@@ -8,6 +8,7 @@ import 'package:funtree/core/map/map.dart';
 import 'package:funtree/core/map/tree.dart';
 import 'package:funtree/core/utils/size_utils.dart';
 import 'package:funtree/theme/theme_helper.dart';
+import 'package:funtree/widgets/home_screen/home_map.dart';
 
 int mapIndex = 0;
 
@@ -87,8 +88,9 @@ class MapEditorScreenState extends State<MapEditorScreen> {
           ),
         ),
         onWillPop: () async {
-          Navigator.pushReplacementNamed(context, AppRoutes.homescreenScreen);
-          return false;
+          print("ob");
+          resetMap();
+          return true;
         },
       ),
     ));

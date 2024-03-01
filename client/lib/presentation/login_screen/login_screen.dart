@@ -39,7 +39,7 @@ class LoginScreen extends StatelessWidget {
                       Text("FUN TREE",
                           style: CustomTextStyles.displayMediumLightgreen100),
                       SizedBox(height: 40.v),
-                      Container(
+                      Expanded(child: Container(
                           padding: EdgeInsets.symmetric(
                               horizontal: 27.h, vertical: 29.v),
                           decoration: AppDecoration.fillOnError.copyWith(
@@ -59,7 +59,7 @@ class LoginScreen extends StatelessWidget {
                                                   .textTheme.displayMedium),
                                           TextSpan(
                                               text:
-                                                  "Please enter your information",
+                                              "Please enter your information",
                                               style: CustomTextStyles
                                                   .bodyMediumff445d48)
                                         ]),
@@ -78,7 +78,7 @@ class LoginScreen extends StatelessWidget {
                                             height: 25.adaptSize,
                                             width: 25.adaptSize)),
                                     suffixConstraints:
-                                        BoxConstraints(maxHeight: 32.v),
+                                    BoxConstraints(maxHeight: 32.v),
                                     borderDecoration: TextFormFieldStyleHelper
                                         .underLinePrimary,
                                     filled: false),
@@ -97,7 +97,7 @@ class LoginScreen extends StatelessWidget {
                                             height: 25.adaptSize,
                                             width: 25.adaptSize)),
                                     suffixConstraints:
-                                        BoxConstraints(maxHeight: 32.v),
+                                    BoxConstraints(maxHeight: 32.v),
                                     obscureText: true,
                                     borderDecoration: TextFormFieldStyleHelper
                                         .underLinePrimary,
@@ -119,7 +119,7 @@ class LoginScreen extends StatelessWidget {
                                     height: 54.adaptSize,
                                     width: 54.adaptSize,
                                     alignment: Alignment.center),
-                              ]))
+                              ])))
                     ])))));
   }
 
