@@ -16,7 +16,6 @@ import 'package:funtree/widgets/camera/camera.dart';
 import 'package:funtree/widgets/custom_elevated_button.dart';
 import 'package:funtree/widgets/custom_icon_button.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
-
 class CamerascreenScreen extends StatefulWidget {
   const CamerascreenScreen({super.key});
 
