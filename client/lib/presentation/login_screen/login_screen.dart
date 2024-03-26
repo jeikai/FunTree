@@ -143,6 +143,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   onTapLogin(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.homescreenScreen);
+    Navigator.pushNamed(context, AppRoutes.navigationMenu);
   }
 }

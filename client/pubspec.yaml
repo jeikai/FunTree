@@ -22,6 +22,7 @@ dependencies:
   custom_clippers:
   velocity_x:
   google_ml_kit: ^0.16.3
+  get: ^4.6.6
 dev_dependencies: 
   flutter_test: 
     sdk: flutter
