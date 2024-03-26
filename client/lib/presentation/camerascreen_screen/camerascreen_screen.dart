@@ -1,12 +1,21 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
+import 'package:funtree/backend/backend.dart';
 import 'package:funtree/core/app_export.dart';
+import 'package:funtree/presentation/homescreen_screen/homescreen_screen.dart';
 import 'package:funtree/widgets/app_bar/appbar_leading_image.dart';
 import 'package:funtree/widgets/app_bar/appbar_title.dart';
 import 'package:funtree/widgets/app_bar/custom_app_bar.dart';
+import 'package:funtree/widgets/camera/camera.dart';
 import 'package:funtree/widgets/custom_elevated_button.dart';
 import 'package:funtree/widgets/custom_icon_button.dart';
-
+import 'package:google_ml_kit/google_ml_kit.dart';
 class CamerascreenScreen extends StatefulWidget {
   const CamerascreenScreen({super.key});
 
@@ -14,13 +23,17 @@ class CamerascreenScreen extends StatefulWidget {
   State<CamerascreenScreen> createState() => _CamerascreenScreenState();
 }
 
-class _CamerascreenScreenState extends State<CamerascreenScreen> {
+class _CamerascreenScreenState extends State<CamerascreenScreen> with SingleTickerProviderStateMixin<CamerascreenScreen> {
+  Ticker? _ticker;
+  final Duration tickDuration = Duration(microseconds: 500); // Set your desired tick duration here
+  Duration lastTick = Duration.zero;
+
+  final listenable = Bound();
   bool isFlashOn = false;
-  CameraController? controller;
+  bool isCameraReady = false;
   late List<CameraDescription> _cameras;
 
   Future<void> initCamera() async {
-    _cameras = await availableCameras();
   }
 
   @override
@@ -51,7 +64,6 @@ class _CamerascreenScreenState extends State<CamerascreenScreen> {
 
   @override
   void dispose() {
-    controller!.dispose();
     super.dispose();
   }
 

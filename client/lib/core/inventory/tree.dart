@@ -2,6 +2,7 @@ import 'package:funtree/core/utils/image_constant.dart';
 import 'package:uuid/uuid.dart';
 
 class Tree {
+  String id;
   String uuid;
   String name;
   String address;
@@ -13,7 +14,8 @@ class Tree {
   String notificationImagePath;
 
   Tree(
-      {this.name = "Tree",
+      {this.id = "1",
+      this.name = "Tree",
       this.address = "Address",
       this.temperature = "29°",
       this.aqi = "112",
