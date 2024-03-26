@@ -37,10 +37,10 @@ class _CamerascreenScreenState extends State<CamerascreenScreen> {
         if (e is CameraException) {
           switch (e.code) {
             case 'CameraAccessDenied':
-            // Handle access errors here.
+              // Handle access errors here.
               break;
             default:
-            // Handle other errors here.
+              // Handle other errors here.
               break;
           }
         }
@@ -65,21 +65,21 @@ class _CamerascreenScreenState extends State<CamerascreenScreen> {
         body: Material(
           child: controller == null
               ? Center(
-            child: CircularProgressIndicator(),
-          )
+                  child: CircularProgressIndicator(),
+                )
               : Stack(
-            children: [
-              SizedBox(
-                height: 800.v,
-                width: 360.h,
-                child: CameraPreview(controller!),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: _buildFiftySix(context),
-              ),
-            ],
-          ),
+                  children: [
+                    SizedBox(
+                      height: 800.v,
+                      width: 360.h,
+                      child: CameraPreview(controller!),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: _buildFiftySix(context),
+                    ),
+                  ],
+                ),
         ),
       ),
     );
@@ -111,32 +111,29 @@ class _CamerascreenScreenState extends State<CamerascreenScreen> {
         ]);
   }
 
-  /// Section Widget
   Widget _buildFiftySix(BuildContext context) {
     return Container(
         height: 180.v,
-        child: Stack(
-            children: [
-              Center(
-                  child:CustomIconButton(
-                      height: 80.adaptSize,
-                      width: 80.adaptSize,
-                      padding: EdgeInsets.all(19.h),
-                      child: CustomImageView(
-                          imagePath: ImageConstant.imgSearch80x80))
-              ),
-              Align(
-                  alignment: Alignment.bottomRight,
-                  child: Padding(
-                      padding: EdgeInsets.only(bottom: 10.adaptSize, right: 10.adaptSize),
-                      child: CustomIconButton(
-                          height: 40.adaptSize,
-                          width: 40.adaptSize,
-                          padding: EdgeInsets.all(10.h),
-                          child:
-                          CustomImageView(imagePath: ImageConstant.imgGroup6)))
-              )
-            ]));
+        child: Stack(children: [
+          Center(
+              child: CustomIconButton(
+                  height: 80.adaptSize,
+                  width: 80.adaptSize,
+                  padding: EdgeInsets.all(19.h),
+                  child: CustomImageView(
+                      imagePath: ImageConstant.imgSearch80x80))),
+          Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                  padding: EdgeInsets.only(
+                      bottom: 10.adaptSize, right: 10.adaptSize),
+                  child: CustomIconButton(
+                      height: 40.adaptSize,
+                      width: 40.adaptSize,
+                      padding: EdgeInsets.all(10.h),
+                      child:
+                          CustomImageView(imagePath: ImageConstant.imgGroup6))))
+        ]));
   }
 
   onTapMultiply(BuildContext context) {

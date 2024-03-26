@@ -53,4 +53,4 @@ const deleteAllHistory = async () => {
 	const deleteHistory = await ChatHistory.deleteMany();
 	return deleteHistory;
 };
-export default { addChatHistory, getAllHistory, deleteAllHistory };
+export default { addChatHistory, getAllHistory, deleteAllHistory }; 
