@@ -11,11 +11,13 @@ class Header extends StatelessWidget {
     required this.aqi,
     required this.humidity,
     required this.wind,
-}) : super(key: key);
+    required this.currentAddress
+  }) : super(key: key);
   final double temp;
   final int aqi;
   final int humidity;
   final double wind;
+  final String currentAddress;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -30,6 +32,7 @@ class Header extends StatelessWidget {
       ),
     );
   }
+
   Widget _buildLeftSide(BuildContext context) {
     return SizedBox(
       height: 92.v,
@@ -63,7 +66,7 @@ class Header extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: "Temp: ${temp}\n",
+                          text: "Temp: ${temp} ℃\n",
                           style: CustomTextStyles.bodySmallffffffff,
                         ),
                         TextSpan(
@@ -102,7 +105,7 @@ class Header extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CustomImageView(
-                  imagePath: ImageConstant.imgNotification,
+                  imagePath: ImageConstant.imgCircledUserMale,
                   height: 27.adaptSize,
                   width: 27.adaptSize,
                 ),
@@ -132,15 +135,25 @@ class Header extends StatelessWidget {
             ),
           ),
           SizedBox(height: 11.v),
-          CustomImageView(
-            imagePath: ImageConstant.imgCircledUserMale,
-            height: 40.adaptSize,
-            width: 40.adaptSize,
-            alignment: Alignment.centerRight,
+          Text(
+            _formatAddress(currentAddress),
+            style: CustomTextStyles.bodySmallffffffff,
           ),
         ],
       ),
     );
+  }
+  String _formatAddress(String address) {
+    if (address.length <= 97) {
+      return address;
+    }
+
+    int endIndex = 97;
+    while (endIndex < address.length && address[endIndex] != ' ') {
+      endIndex++;
+    }
+
+    return address.substring(0, endIndex.clamp(0, address.length)) + '\n' + address.substring(endIndex).trim();
   }
 }
 

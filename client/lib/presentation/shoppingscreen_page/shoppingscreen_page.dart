@@ -1,82 +1,145 @@
+import 'package:funtree/core/SharePref.dart';
+
 import '../shoppingscreen_page/widgets/userprofile_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:funtree/core/app_export.dart';
 import 'package:funtree/widgets/custom_icon_button.dart';
 import 'package:funtree/widgets/custom_search_view.dart';
 
-// ignore_for_file: must_be_immutable
-class ShoppingscreenPage extends StatelessWidget {
+class ShoppingscreenPage extends StatefulWidget {
   ShoppingscreenPage({Key? key})
       : super(
           key: key,
         );
 
+  @override
+  State<ShoppingscreenPage> createState() => _ShoppingscreenPageState();
+}
+
+double latitude = 0.0;
+double longitude = 0.0;
+int AQI = 0;
+int humidity = 0;
+double wind = 0.00;
+double temp = 0.0;
+String currentAddress = "";
+
+class _ShoppingscreenPageState extends State<ShoppingscreenPage> {
+  bool isLoading = true;
   TextEditingController searchController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    _fetchData();
+  }
+  Future<void> getInfor() async {
+    print("Start");
+    print(SharePref.getTemp());
+    latitude = (await SharePref.getTemp()!) as double;
+    longitude = (await SharePref.getLongtitude()) as double;
+    temp = (await SharePref.getTemp()) as double;
+    AQI = (await SharePref.getAqi()) as int;
+    humidity = (await SharePref.getHumidity()) as int;
+    wind = (await SharePref.getWind()) as double;
+    currentAddress = (await SharePref.getAdress())!;
+    print("Done");
+  }
+  Future<void> _fetchData() async {
+    await getInfor();
+    setState(() {
+      isLoading = false;
+    });
+  }
+  Widget _buildLoadingScreen() {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        extendBody: true,
-        extendBodyBehindAppBar: true,
-        backgroundColor: appTheme.green300Bc,
-        resizeToAvoidBottomInset: false,
-        body: Container(
-          width: SizeUtils.width,
-          height: SizeUtils.height,
-          decoration: BoxDecoration(
-            color: appTheme.green300Bc,
-            image: DecorationImage(
-              image: AssetImage(
-                ImageConstant.imgLogin,
-              ),
-              fit: BoxFit.cover,
-            ),
-          ),
+        body: isLoading ? _buildLoadingScreen() : _buildMainScreen(),
+      ),
+    );
+  }
+  Widget _buildMainScreen() {
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
           child: Container(
-            width: double.maxFinite,
-            decoration: AppDecoration.fillGreenBc.copyWith(
+            constraints: BoxConstraints(
+              maxHeight: SizeUtils.height,
+              maxWidth: SizeUtils.width,
+            ),
+            decoration: BoxDecoration(
+              color: appTheme.green300Bc,
               image: DecorationImage(
-                image: AssetImage(
-                  ImageConstant.imgLogin,
-                ),
+                image: AssetImage(ImageConstant.imgLogin),
                 fit: BoxFit.cover,
               ),
             ),
-            child: Column(
-              children: [
-                _buildFunTreeSection(context),
-                SizedBox(height: 5.v),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 19.h,
-                    vertical: 13.v,
-                  ),
-                  decoration: AppDecoration.fillGreen.copyWith(
-                    borderRadius: BorderRadiusStyle.customBorderTL301,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CustomSearchView(
-                        controller: searchController,
-                        hintText: "Search",
-                      ),
-                      SizedBox(height: 32.v),
-                      _buildUserProfile(context),
-                      SizedBox(height: 32.v),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+            child: getCurrentPage(),
           ),
         ),
       ),
     );
   }
 
-  /// Section Widget
+  Widget getCurrentPage() {
+    return Container(
+      width: SizeUtils.width,
+      height: SizeUtils.height,
+      decoration: BoxDecoration(
+        color: appTheme.green300Bc,
+        image: DecorationImage(
+          image: AssetImage(
+            ImageConstant.imgLogin,
+          ),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Container(
+        width: double.maxFinite,
+        decoration: AppDecoration.fillGreenBc.copyWith(
+          image: DecorationImage(
+            image: AssetImage(
+              ImageConstant.imgLogin,
+            ),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Column(
+          children: [
+            _buildFunTreeSection(context),
+            SizedBox(height: 5.v),
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 19.h,
+                vertical: 13.v,
+              ),
+              decoration: AppDecoration.fillGreen.copyWith(
+                borderRadius: BorderRadiusStyle.customBorderTL301,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CustomSearchView(
+                    controller: searchController,
+                    hintText: "Search",
+                  ),
+                  SizedBox(height: 32.v),
+                  _buildUserProfile(context),
+                  SizedBox(height: 32.v),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
   Widget _buildFunTreeSection(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
@@ -121,11 +184,11 @@ class ShoppingscreenPage extends StatelessWidget {
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                text: "Address: Hanoi\nTemperature: 29° AQI: ",
+                                text: "Address: Hanoi\nTemperature: 29°AQI: ",
                                 style: CustomTextStyles.bodySmallffffffff,
                               ),
                               TextSpan(
-                                text: "112 Humidity: 95%\nWind: 13 km/h",
+                                text: "112Humidity: 95%\nWind: 13 km/h",
                                 style: CustomTextStyles.bodySmallffff9b57,
                               ),
                             ],

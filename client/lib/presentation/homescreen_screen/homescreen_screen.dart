@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:funtree/backend/backend.dart';
+import 'package:funtree/core/SharePref.dart';
 import 'package:funtree/core/app_export.dart';
 import 'package:funtree/widgets/Header.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:funtree/widgets/custom_search_view.dart';
 import 'package:funtree/widgets/home_screen/home_map.dart';
+import 'package:get/get.dart';
 
 class HomescreenScreen extends StatefulWidget {
   const HomescreenScreen({Key? key}) : super(key: key);
@@ -29,7 +31,6 @@ String currentAddress = "";
 bool isCurrentAddressFetched = false;
 
 class _HomescreenScreenState extends State<HomescreenScreen> {
-
   TextEditingController searchController = TextEditingController();
 
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
@@ -67,9 +68,11 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
     longitude = position.longitude;
     List<Placemark> placemarks =
         await placemarkFromCoordinates(position.latitude, position.longitude);
-    print(placemarks[0]);
     Placemark place = placemarks[0];
     currentAddress = "${place.locality}, ${place.country}";
+    SharePref.setLangtitude(latitude.toString());
+    SharePref.setLongtitude(longitude.toString());
+    SharePref.setAddress(currentAddress);
     isCurrentAddressFetched = true;
   }
 
@@ -81,13 +84,17 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
       final response =
           await Api.getData("weather/current?lat=${latitude}&lng=${longitude}");
       if (response != null) {
-        print(response["data"]["airQuality"]["aqi"]);
-        print(response["data"]["weather"]);
         AQI = response["data"]["airQuality"]["aqi"];
         humidity = response["data"]["weather"]["humidity"];
         wind = response["data"]["weather"]["wind_speed"];
         temp = response["data"]["weather"]["temp"];
-        print(AQI);
+        print(temp);
+        print(temp.toString());
+        SharePref.setTemp(temp.toString());
+        SharePref.setAqi(AQI.toString());
+        SharePref.setHumidity(humidity.toString());
+        SharePref.setWind(wind.toString());
+        print(SharePref.getTemp());
         isWeatherFetched = true;
       } else {
         print("Failed to fetch weather data: Response is null.");
@@ -154,7 +161,7 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
       width: double.maxFinite,
       child: Column(
         children: [
-          Header(temp: temp, aqi: AQI, humidity: humidity, wind: wind),
+          Header(temp: temp, aqi: AQI, humidity: humidity, wind: wind, currentAddress: currentAddress,),
           SizedBox(height: 5.v),
           Expanded(
             child: Container(
@@ -180,7 +187,6 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
     );
   }
 }
-
 
 void onTapBedroom(BuildContext context) {
   Navigator.pushNamed(context, AppRoutes.caredetailscreenPage);

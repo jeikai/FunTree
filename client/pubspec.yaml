@@ -13,7 +13,7 @@ dependencies:
   dotted_border: ^2.0.0
   carousel_slider: ^4.2.1
   uuid: ^4.2.2
-  shared_preferences: ^2.0.6
+  shared_preferences: ^2.2.2
   google_nav_bar: ^5.0.6
   camera: ^0.10.5+9
   geolocator: ^11.0.0
@@ -23,6 +23,7 @@ dependencies:
   velocity_x:
   google_ml_kit: ^0.16.3
   get: ^4.6.6
+  fluttertoast: ^8.2.4
 dev_dependencies: 
   flutter_test: 
     sdk: flutter
