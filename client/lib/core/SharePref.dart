@@ -6,35 +6,35 @@ class SharePref {
   static Future init() async {
     _preferences = await SharedPreferences.getInstance();
   }
-  static Future setTemp(String temp) async =>
-      await _preferences?.setString("temp", temp);
+  static Future setTemp(double temp) async =>
+      await _preferences?.setDouble("temp", temp);
 
-  static String? getTemp() => _preferences?.getString("temp");
+  static double? getTemp() => _preferences?.getDouble("temp");
 
-  static Future setAqi(String AQI) async =>
-      await _preferences?.setString("AQI", AQI);
+  static Future setAqi(int AQI) async =>
+      await _preferences?.setInt("AQI", AQI);
 
-  static String? getAqi() => _preferences?.getString("AQI");
+  static int? getAqi() => _preferences?.getInt("AQI");
 
-  static Future setHumidity(String humid) async =>
-      await _preferences?.setString("humidity", humid);
+  static Future setHumidity(int humid) async =>
+      await _preferences?.setInt("humidity", humid);
 
-  static String? getHumidity() => _preferences?.getString("humidity");
+  static int? getHumidity() => _preferences?.getInt("humidity");
 
-  static Future setWind(String wind) async =>
-      await _preferences?.setString("wind", wind);
+  static Future setWind(double wind) async =>
+      await _preferences?.setDouble("wind", wind);
 
-  static String? getWind() => _preferences?.getString("wind");
+  static double? getWind() => _preferences?.getDouble("wind");
 
-  static Future setLangtitude(String langtitude) async =>
-      await _preferences?.setString("langtitude", langtitude);
+  static Future setLangtitude(double langtitude) async =>
+      await _preferences?.setDouble("langtitude", langtitude);
 
-  static String? getLangtitude() => _preferences?.getString("langtitude");
+  static double? getLangtitude() => _preferences?.getDouble("langtitude");
 
-  static Future setLongtitude(String longtitude) async =>
-      await _preferences?.setString("longtitude", longtitude);
+  static Future setLongtitude(double longtitude) async =>
+      await _preferences?.setDouble("longtitude", longtitude);
 
-  static String? getLongtitude() => _preferences?.getString("longtitude");
+  static double? getLongtitude() => _preferences?.getDouble("longtitude");
 
   static Future setAddress(String address) async =>
       await _preferences?.setString("address", address);

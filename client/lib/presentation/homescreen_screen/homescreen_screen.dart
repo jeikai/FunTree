@@ -70,8 +70,8 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
         await placemarkFromCoordinates(position.latitude, position.longitude);
     Placemark place = placemarks[0];
     currentAddress = "${place.locality}, ${place.country}";
-    SharePref.setLangtitude(latitude.toString());
-    SharePref.setLongtitude(longitude.toString());
+    SharePref.setLangtitude(latitude);
+    SharePref.setLongtitude(longitude);
     SharePref.setAddress(currentAddress);
     isCurrentAddressFetched = true;
   }
@@ -84,17 +84,14 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
       final response =
           await Api.getData("weather/current?lat=${latitude}&lng=${longitude}");
       if (response != null) {
-        AQI = response["data"]["airQuality"]["aqi"];
-        humidity = response["data"]["weather"]["humidity"];
+        AQI = response["data"]["airQuality"]["aqi"] ?? 0.0;
+        humidity = response["data"]["weather"]["humidity"]!;
         wind = response["data"]["weather"]["wind_speed"];
         temp = response["data"]["weather"]["temp"];
-        print(temp);
-        print(temp.toString());
-        SharePref.setTemp(temp.toString());
-        SharePref.setAqi(AQI.toString());
-        SharePref.setHumidity(humidity.toString());
-        SharePref.setWind(wind.toString());
-        print(SharePref.getTemp());
+        await SharePref.setTemp(temp);
+        await SharePref.setAqi(AQI);
+        await SharePref.setHumidity(humidity);
+        await SharePref.setWind(wind);
         isWeatherFetched = true;
       } else {
         print("Failed to fetch weather data: Response is null.");
@@ -161,7 +158,13 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
       width: double.maxFinite,
       child: Column(
         children: [
-          Header(temp: temp, aqi: AQI, humidity: humidity, wind: wind, currentAddress: currentAddress,),
+          Header(
+            temp: temp,
+            aqi: AQI,
+            humidity: humidity,
+            wind: wind,
+            currentAddress: currentAddress,
+          ),
           SizedBox(height: 5.v),
           Expanded(
             child: Container(
@@ -173,10 +176,6 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CustomSearchView(
-                    controller: searchController,
-                    hintText: "Search my plants",
-                  ),
                   HomeMap(),
                 ],
               ),
