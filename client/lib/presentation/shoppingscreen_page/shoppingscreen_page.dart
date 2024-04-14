@@ -94,38 +94,38 @@ class _ShoppingscreenPageState extends State<ShoppingscreenPage> {
   Widget getCurrentPage() {
     return SizedBox(
       width: double.maxFinite,
-        child: Column(
-          children: [
-            Header(
-                temp: temp,
-                aqi: AQI,
-                humidity: humidity,
-                wind: wind,
-                currentAddress: currentAddress),
-            SizedBox(height: 5.v),
-            Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 19.h,
-                vertical: 13.v,
-              ),
-              decoration: AppDecoration.fillGreen.copyWith(
-                borderRadius: BorderRadiusStyle.customBorderTL301,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CustomSearchView(
-                    controller: searchController,
-                    hintText: "Search",
-                  ),
-                  SizedBox(height: 32.v),
-                  _buildUserProfile(context),
-                  SizedBox(height: 32.v),
-                ],
-              ),
+      child: Column(
+        children: [
+          Header(
+              temp: temp,
+              aqi: AQI,
+              humidity: humidity,
+              wind: wind,
+              currentAddress: currentAddress),
+          SizedBox(height: 5.v),
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 19.h,
+              vertical: 13.v,
             ),
-          ],
-        ),
+            decoration: AppDecoration.fillGreen.copyWith(
+              borderRadius: BorderRadiusStyle.customBorderTL301,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CustomSearchView(
+                  controller: searchController,
+                  hintText: "Search",
+                ),
+                SizedBox(height: 32.v),
+                _buildUserProfile(context),
+                SizedBox(height: 32.v),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
