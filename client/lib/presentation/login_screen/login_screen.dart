@@ -31,6 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
         SharePref.getEmail() != '' &&
         SharePref.getName() != null &&
         SharePref.getName() != '') {
+      await Future.delayed(Duration(milliseconds: 100));
       print('There are local login data found!');
       showDialog(
           context: context,
@@ -69,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     if (!isRuntimered) {
-      // runTimer(context);
+      runTimer(context);
       isRuntimered = true;
     }
     return SafeArea(
@@ -179,10 +180,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                         SizedBox(height: 11.v),
                                         Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Text("Don’t have account?",
-                                                style: CustomTextStyles
-                                                    .bodyMedium14)),
+                                          alignment: Alignment.centerRight,
+                                          child: InkWell(
+                                            onTap: () => Navigator.pushNamed(
+                                                context, AppRoutes.logUpScreen),
+                                            child: Text(
+                                              "Don’t have account?",
+                                              style:
+                                                  CustomTextStyles.bodyMedium14,
+                                            ),
+                                          ),
+                                        ),
                                         SizedBox(height: 17.v),
                                         CustomElevatedButton(
                                             text: "Login",
@@ -213,20 +221,25 @@ class _LoginScreenState extends State<LoginScreen> {
               onWillPop: () async => false);
         });
     if (_formKey.currentState!.validate()) {
-      Map<String, dynamic> data = {
-        "email": _email.text,
-        "password": _password.text,
-      };
-      var response = await Api().postData("user/login", data);
-      print(response);
-      if (response?["message"] == "Login successfully") {
-        await setUpUser(response);
-        ToastNoti.show("Đăng nhập thành công");
-        Navigator.pop(context);
-        onTapLogin(context);
+      if (_email.text.isNotEmpty && _password.text.isNotEmpty) {
+        Map<String, dynamic> data = {
+          "email": _email.text,
+          "password": _password.text,
+        };
+        var response = await Api().postData("user/login", data);
+        print(response);
+        if (response?["message"] == "Login successfully") {
+          await setUpUser(response);
+          ToastNoti.show("Đăng nhập thành công");
+          Navigator.pop(context);
+          onTapLogin(context);
+        } else {
+          Navigator.pop(context);
+          ToastNoti.show("Sai email hoặc mật khẩu");
+        }
       } else {
         Navigator.pop(context);
-        ToastNoti.show("Sai email hoặc mật khẩu");
+        ToastNoti.show("Vui lòng điền đầy đủ thông tin!");
       }
     } else {
       Navigator.pop(context);
