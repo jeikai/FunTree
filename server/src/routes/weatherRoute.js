@@ -8,3 +8,4 @@ const api = Router();
 api.get('/api/weather/current', getCurrentWeatherData);
 api.get('/api/weather/forecast', getForecastWeatherData);
 export default api;
+ 

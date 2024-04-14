@@ -4,6 +4,7 @@ import 'package:funtree/core/SharePref.dart';
 import 'core/app_export.dart';
 
 var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharePref.init();

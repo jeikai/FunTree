@@ -82,7 +82,7 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
     }
     try {
       final response =
-          await Api.getData("weather/current?lat=${latitude}&lng=${longitude}");
+          await Api().getData("weather/current?lat=${latitude}&lng=${longitude}");
       if (response != null) {
         AQI = response["data"]["airQuality"]["aqi"] ?? 0.0;
         humidity = response["data"]["weather"]["humidity"]!;

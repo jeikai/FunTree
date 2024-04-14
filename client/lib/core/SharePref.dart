@@ -40,4 +40,19 @@ class SharePref {
       await _preferences?.setString("address", address);
 
   static String? getAdress() => _preferences?.getString("address");
+
+  static Future setEmail(String email) async =>
+      await _preferences?.setString("email", email);
+
+  static String? getEmail() => _preferences?.getString("email");
+
+  static Future setName(String name) async =>
+      await _preferences?.setString("name", name);
+
+  static String? getName() => _preferences?.getString("name");
+
+  static Future setUserId(String id) async =>
+      await _preferences?.setString("_userId", id);
+
+  static String? getUserId() => _preferences?.getString("_userId");
 }

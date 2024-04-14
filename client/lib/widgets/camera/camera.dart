@@ -197,7 +197,7 @@ class _CameraViewState extends State<CameraView> {
   }
 
   Future<dynamic> sendToApi(Uint8List bytes) async {
-    var response = Api.postData("plant/identification", {
+    var response = Api().postData("plant/identification", {
       "images": bytes,
       "lat": latitude == 0 ? "21.0277644" : latitude,
       "lng": longitude == 0 ? "105.8341598" : longitude,

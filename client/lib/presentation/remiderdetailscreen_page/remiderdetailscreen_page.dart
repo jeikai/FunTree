@@ -66,7 +66,7 @@ class RemiderdetailscreenPageState extends State<RemiderdetailscreenPage>
   Future<void> getWeather() async {
     try {
       final response =
-          await Api.getData("weather/current?lat=${latitude}&lng=${longitude}");
+          await Api().getData("weather/current?lat=${latitude}&lng=${longitude}");
       if (response != null) {
         print(response["data"]["airQuality"]["healthRecommendations"]);
         print(response["data"]["weather"]);
