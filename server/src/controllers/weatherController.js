@@ -3,13 +3,13 @@ import {
 	GGMAP_GEOCODE_URL,
 	OPEN_WEATHER_URL,
 	GGMAP_AQI_URL,
-} from '../config/const.js';
+} from '../config/const.js'; 
 import { getLatAndLng } from '../utils/utils.js';
 const getCurrentWeatherData = async (req, res) => {
 	const { lat, lng } = req.query;
 	try {
 		const weather = await axios.get(OPEN_WEATHER_URL, {
-			headers: {
+			headers: { 
 				'Content-Type': 'application/json',
 			},
 			params: {
