@@ -86,8 +86,8 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
       if (response != null) {
         AQI = response["data"]["airQuality"]["aqi"] ?? 0.0;
         humidity = response["data"]["weather"]["humidity"]!;
-        wind = response["data"]["weather"]["wind_speed"];
-        temp = response["data"]["weather"]["temp"];
+        wind = response["data"]["weather"]["wind_kph"];
+        temp = response["data"]["weather"]["temp_c"].toDouble();
         await SharePref.setTemp(temp);
         await SharePref.setAqi(AQI);
         await SharePref.setHumidity(humidity);
