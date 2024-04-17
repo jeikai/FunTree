@@ -48,11 +48,6 @@ class _ChattingscreenScreenState extends State<ChattingscreenScreen> {
               padding: EdgeInsets.only(left: 7.h, right: 249.h),
               child: Row(children: [
                 AppbarTitleImage(
-                    imagePath: ImageConstant.imgBack20x20,
-                    onTap: () {
-                      onTapBack(context);
-                    }),
-                AppbarTitleImage(
                     imagePath: ImageConstant.imgSettings,
                     margin: EdgeInsets.only(left: 11.h)),
                 AppbarSubtitle(

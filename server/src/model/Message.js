@@ -1,28 +1,17 @@
 import mongoose from 'mongoose';
 
-const chatHistorySchema = new mongoose.Schema({
-	role: {
-		type: String,
-		required: true,
-	},
-	parts: [
-		{
-			text: String,
-		},
-	],
-	timeStamp: {
-		type: Date,
-		default: Date.now,
-	},
+const messageSchema = new mongoose.Schema({
+	message: { type: String, required: true, default: '' },
+	sender: { type: String, required: true, default: 'user' },
 });
-const ChatHistory = mongoose.model('ChatHistory', chatHistorySchema);
+const Message = mongoose.model('Message', messageSchema);
 
 const addChatHistory = async (user, model) => {
 	const userChat = new ChatHistory({
 		role: 'user',
 		parts: [
 			{
-				text: user,
+				text: user, 
 			},
 		],
 	});

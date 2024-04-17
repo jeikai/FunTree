@@ -24,7 +24,8 @@ dependencies:
   google_ml_kit: ^0.16.3
   get: ^4.6.6
   fluttertoast: ^8.2.4
-dev_dependencies: 
+dev_dependencies:
+  flutter_launcher_icons: "^0.13.1"
   flutter_test: 
     sdk: flutter
 flutter: 
@@ -37,3 +38,20 @@ flutter:
       fonts: 
         - asset: assets/fonts/ItimRegular.ttf
           weight: 400
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/img_garden.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/images/img_garden.png"
+    background_color: "#hexcode"
+    theme_color: "#hexcode"
+  windows:
+    generate: true
+    image_path: "assets/images/img_garden.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "path/to/image.png"
