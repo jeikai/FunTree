@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:funtree/core/app_export.dart';
 
-// ignore: must_be_immutable
 class UserprofileItemWidget extends StatelessWidget {
   const UserprofileItemWidget({Key? key})
       : super(
@@ -58,7 +57,6 @@ class UserprofileItemWidget extends StatelessWidget {
                     style: CustomTextStyles.bodySmallPrimary,
                   ),
                 ),
-                SizedBox(height: 3.v),
               ],
             ),
           ),

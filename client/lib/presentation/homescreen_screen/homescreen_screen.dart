@@ -84,9 +84,9 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
       final response =
           await Api().getData("weather/current?lat=${latitude}&lng=${longitude}");
       if (response != null) {
-        AQI = response["data"]["airQuality"]["aqi"] ?? 0.0;
-        humidity = response["data"]["weather"]["humidity"]!;
-        wind = response["data"]["weather"]["wind_kph"];
+        AQI = response["data"]["airQuality"]["aqi"].toInt() ?? 0.0;
+        humidity = response["data"]["weather"]["humidity"]!.toInt();
+        wind = response["data"]["weather"]["wind_kph"].toDouble();
         temp = response["data"]["weather"]["temp_c"].toDouble();
         image = response["data"]["weather"]["condition"]["icon"];
         await SharePref.setTemp(temp);

@@ -30,10 +30,6 @@ class NavigationMenu extends StatelessWidget {
                     color: Color.fromARGB(255, 73, 136, 85)),
                 label: 'Shopping'),
             NavigationDestination(
-                icon: Icon(Icons.camera_alt_rounded,
-                    color: Color.fromARGB(255, 73, 136, 85)),
-                label: 'Camera'),
-            NavigationDestination(
                 icon: Icon(Icons.people_rounded,
                     color: Color.fromARGB(255, 73, 136, 85)),
                 label: 'Community'),
@@ -55,7 +51,6 @@ class NavigationController extends GetxController {
   final screens = [
     HomescreenScreen(),
     ShoppingscreenPage(),
-    CamerascreenScreen(),
     CommunityscreenScreen(),
     ChattingscreenScreen()
   ];

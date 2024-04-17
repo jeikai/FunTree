@@ -106,25 +106,25 @@ class _ShoppingscreenPageState extends State<ShoppingscreenPage> {
             image: image,
           ),
           SizedBox(height: 5.v),
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: 19.h,
-              vertical: 13.v,
-            ),
-            decoration: AppDecoration.fillGreen.copyWith(
-              borderRadius: BorderRadiusStyle.customBorderTL301,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CustomSearchView(
-                  controller: searchController,
-                  hintText: "Search",
-                ),
-                SizedBox(height: 32.v),
-                _buildUserProfile(context),
-                SizedBox(height: 32.v),
-              ],
+          Expanded(
+            child: Container(
+              height: 570.v,
+              padding: EdgeInsets.symmetric(horizontal: 13.h, vertical: 13.v),
+              decoration: AppDecoration.fillGreen.copyWith(
+                borderRadius: BorderRadiusStyle.customBorderTL30,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CustomSearchView(
+                    controller: searchController,
+                    hintText: "Search",
+                  ),
+                  SizedBox(height: 32.v),
+                  _buildUserProfile(context),
+                  SizedBox(height: 32.v),
+                ],
+              ),
             ),
           ),
         ],

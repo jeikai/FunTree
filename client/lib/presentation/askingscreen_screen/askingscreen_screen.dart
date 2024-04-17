@@ -5,24 +5,21 @@ import 'package:funtree/widgets/app_bar/appbar_trailing_button.dart';
 import 'package:funtree/widgets/app_bar/custom_app_bar.dart';
 
 class AskingscreenScreen extends StatefulWidget {
-
   const AskingscreenScreen({Key? key})
       : super(
-    key: key,
-  );
+          key: key,
+        );
 
   @override
   State<StatefulWidget> createState() => AskingscreenScreenState();
 }
 
 class AskingscreenScreenState extends State<AskingscreenScreen> {
-
   AbQuestion question = q0;
   Map<String, Object> data = {};
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: appTheme.gray600,
@@ -62,11 +59,12 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
   void _onTap(Object answer) {
     print("onTap: $answer");
     data[question.id] = answer;
-    if(question is Question) {
+    if (question is Question) {
       setState(() {
         question = (question as Question).answers[answer]!;
       });
-    } else if(question is InputQuestion && (question as InputQuestion).nextQuestion != null) {
+    } else if (question is InputQuestion &&
+        (question as InputQuestion).nextQuestion != null) {
       setState(() {
         question = (question as InputQuestion).nextQuestion!;
       });
@@ -77,26 +75,28 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
 
   List<Widget> _buildAnswers(BuildContext context) {
     List<Widget> widgets = [];
-    if(question is Question) {
+    if (question is Question) {
       (question as Question).answers.forEach((key, value) {
         widgets.add(_buildAnswerCell(context, key));
         widgets.add(SizedBox(height: 21.v));
       });
     } else if (question is InputQuestion) {
-      widgets.add(_buildInputAnswerCell(context, (question as InputQuestion).inputType));
+      widgets.add(_buildInputAnswerCell(
+          context, (question as InputQuestion).inputType));
     }
     return widgets;
   }
 
   /// Section Widget
   Widget _buildAnswerCell(BuildContext context, String answer) {
-    if(question is Question) {
+    if (question is Question) {
       return AnswerCell(
         answer: answer,
         onTap: _onTap,
       );
     } else if (question is InputQuestion) {
-      return _buildInputAnswerCell(context, (question as InputQuestion).inputType);
+      return _buildInputAnswerCell(
+          context, (question as InputQuestion).inputType);
     } else {
       return Container();
     }
@@ -121,7 +121,8 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
         return TextField(
           style: CustomTextStyles.bodyMediumGray600,
           decoration: InputDecoration(
-            hintText: (question as InputQuestion).placeholder ?? "Enter your answer",
+            hintText:
+                (question as InputQuestion).placeholder ?? "Enter your answer",
             hintStyle: CustomTextStyles.bodyMediumGray600,
           ),
           onSubmitted: (value) {
@@ -135,7 +136,8 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
         return TextField(
           style: CustomTextStyles.bodyMediumGray600,
           decoration: InputDecoration(
-            hintText: (question as InputQuestion).placeholder ?? "Enter your answer",
+            hintText:
+                (question as InputQuestion).placeholder ?? "Enter your answer",
             hintStyle: CustomTextStyles.bodyMediumGray600,
           ),
           keyboardType: TextInputType.number,
@@ -150,7 +152,8 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
         return TextField(
           style: CustomTextStyles.bodyMediumGray600,
           decoration: InputDecoration(
-            hintText: (question as InputQuestion).placeholder ?? "Enter your answer",
+            hintText:
+                (question as InputQuestion).placeholder ?? "Enter your answer",
             hintStyle: CustomTextStyles.bodyMediumGray600,
           ),
           keyboardType: TextInputType.datetime,
@@ -165,7 +168,8 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
         return TextField(
           style: CustomTextStyles.bodyMediumGray600,
           decoration: InputDecoration(
-            hintText: (question as InputQuestion).placeholder ?? "Enter your answer",
+            hintText:
+                (question as InputQuestion).placeholder ?? "Enter your answer",
             hintStyle: CustomTextStyles.bodyMediumGray600,
           ),
           keyboardType: TextInputType.datetime,
@@ -180,7 +184,8 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
         return TextField(
           style: CustomTextStyles.bodyMediumGray600,
           decoration: InputDecoration(
-            hintText: (question as InputQuestion).placeholder ?? "Enter your answer",
+            hintText:
+                (question as InputQuestion).placeholder ?? "Enter your answer",
             hintStyle: CustomTextStyles.bodyMediumGray600,
           ),
           keyboardType: TextInputType.datetime,
@@ -195,7 +200,8 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
         return TextField(
           style: CustomTextStyles.bodyMediumGray600,
           decoration: InputDecoration(
-            hintText: (question as InputQuestion).placeholder ?? "Enter your answer",
+            hintText:
+                (question as InputQuestion).placeholder ?? "Enter your answer",
             hintStyle: CustomTextStyles.bodyMediumGray600,
           ),
           keyboardType: TextInputType.emailAddress,
@@ -210,7 +216,8 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
         return TextField(
           style: CustomTextStyles.bodyMediumGray600,
           decoration: InputDecoration(
-            hintText: (question as InputQuestion).placeholder ?? "Enter your answer",
+            hintText:
+                (question as InputQuestion).placeholder ?? "Enter your answer",
             hintStyle: CustomTextStyles.bodyMediumGray600,
           ),
           keyboardType: TextInputType.phone,
@@ -225,7 +232,8 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
         return TextField(
           style: CustomTextStyles.bodyMediumGray600,
           decoration: InputDecoration(
-            hintText: (question as InputQuestion).placeholder ?? "Enter your answer",
+            hintText:
+                (question as InputQuestion).placeholder ?? "Enter your answer",
             hintStyle: CustomTextStyles.bodyMediumGray600,
           ),
           keyboardType: TextInputType.url,
@@ -240,7 +248,8 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
         return TextField(
           style: CustomTextStyles.bodyMediumGray600,
           decoration: InputDecoration(
-            hintText: (question as InputQuestion).placeholder ?? "Enter your answer",
+            hintText:
+                (question as InputQuestion).placeholder ?? "Enter your answer",
             hintStyle: CustomTextStyles.bodyMediumGray600,
           ),
           keyboardType: TextInputType.visiblePassword,
@@ -255,7 +264,8 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
         return TextField(
           style: CustomTextStyles.bodyMediumGray600,
           decoration: InputDecoration(
-            hintText: (question as InputQuestion).placeholder ?? "Enter your answer",
+            hintText:
+                (question as InputQuestion).placeholder ?? "Enter your answer",
             hintStyle: CustomTextStyles.bodyMediumGray600,
           ),
           keyboardType: TextInputType.text,
@@ -270,7 +280,8 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
         return TextField(
           style: CustomTextStyles.bodyMediumGray600,
           decoration: InputDecoration(
-            hintText: (question as InputQuestion).placeholder ?? "Enter your answer",
+            hintText:
+                (question as InputQuestion).placeholder ?? "Enter your answer",
             hintStyle: CustomTextStyles.bodyMediumGray600,
           ),
           keyboardType: TextInputType.datetime,
@@ -285,7 +296,8 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
         return TextField(
           style: CustomTextStyles.bodyMediumGray600,
           decoration: InputDecoration(
-            hintText: (question as InputQuestion).placeholder ?? "Enter your answer",
+            hintText:
+                (question as InputQuestion).placeholder ?? "Enter your answer",
             hintStyle: CustomTextStyles.bodyMediumGray600,
           ),
           keyboardType: TextInputType.datetime,
@@ -300,7 +312,8 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
         return TextField(
           style: CustomTextStyles.bodyMediumGray600,
           decoration: InputDecoration(
-            hintText: (question as InputQuestion).placeholder ?? "Enter your answer",
+            hintText:
+                (question as InputQuestion).placeholder ?? "Enter your answer",
             hintStyle: CustomTextStyles.bodyMediumGray600,
           ),
           keyboardType: TextInputType.number,
@@ -315,7 +328,8 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
         return TextField(
           style: CustomTextStyles.bodyMediumGray600,
           decoration: InputDecoration(
-            hintText: (question as InputQuestion).placeholder ?? "Enter your answer",
+            hintText:
+                (question as InputQuestion).placeholder ?? "Enter your answer",
             hintStyle: CustomTextStyles.bodyMediumGray600,
           ),
           keyboardType: TextInputType.text,
@@ -330,7 +344,8 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
         return TextField(
           style: CustomTextStyles.bodyMediumGray600,
           decoration: InputDecoration(
-            hintText: (question as InputQuestion).placeholder ?? "Enter your answer",
+            hintText:
+                (question as InputQuestion).placeholder ?? "Enter your answer",
             hintStyle: CustomTextStyles.bodyMediumGray600,
           ),
           keyboardType: TextInputType.phone,
@@ -345,7 +360,8 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
         return TextField(
           style: CustomTextStyles.bodyMediumGray600,
           decoration: InputDecoration(
-            hintText: (question as InputQuestion).placeholder ?? "Enter your answer",
+            hintText:
+                (question as InputQuestion).placeholder ?? "Enter your answer",
             hintStyle: CustomTextStyles.bodyMediumGray600,
           ),
           keyboardType: TextInputType.datetime,
@@ -436,11 +452,13 @@ class AnswerCell extends StatelessWidget {
   Widget build(BuildContext context) {
     List<String> lines = splitString(answer);
     List<Widget> widgets = [];
-    for(var line in lines) {
+    for (var line in lines) {
       var (isR, text) = isRecommended(line);
       widgets.add(Text(
         text,
-        style: isR ? CustomTextStyles.bodyMediumOnError : CustomTextStyles.bodyMediumGray600,
+        style: isR
+            ? CustomTextStyles.bodyMediumOnError
+            : CustomTextStyles.bodyMediumGray600,
       ));
       widgets.add(SizedBox(height: 4.v));
     }
@@ -466,9 +484,7 @@ class AnswerCell extends StatelessWidget {
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ...widgets
-                ],
+                children: [...widgets],
               ),
             ),
             CustomImageView(
@@ -483,7 +499,6 @@ class AnswerCell extends StatelessWidget {
     );
   }
 }
-
 
 List<String> splitString(String input) {
   return input.split(" /n ");
