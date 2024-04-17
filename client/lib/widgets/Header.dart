@@ -11,13 +11,15 @@ class Header extends StatelessWidget {
     required this.aqi,
     required this.humidity,
     required this.wind,
-    required this.currentAddress
+    required this.currentAddress,
+    required this.image
   }) : super(key: key);
   final double temp;
   final int aqi;
   final int humidity;
   final double wind;
   final String currentAddress;
+  final String image;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -53,11 +55,10 @@ class Header extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
-                CustomImageView(
-                  imagePath: ImageConstant.imgSunBehindSmall,
-                  height: 60.adaptSize,
-                  width: 60.adaptSize,
-                  margin: EdgeInsets.only(top: 5.v, bottom: 6.v),
+                Image(
+                  image: NetworkImage("http:" + image),
+                    height: 60.adaptSize,
+                    width: 60.adaptSize
                 ),
                 Container(
                   width: 88.h,

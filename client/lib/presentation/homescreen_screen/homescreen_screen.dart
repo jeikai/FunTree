@@ -23,7 +23,7 @@ int AQI = 0;
 int humidity = 0;
 double wind = 0.00;
 double temp = 0.0;
-
+String image = "";
 bool isWeatherFetched = false;
 
 String currentAddress = "";
@@ -88,10 +88,12 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
         humidity = response["data"]["weather"]["humidity"]!;
         wind = response["data"]["weather"]["wind_kph"];
         temp = response["data"]["weather"]["temp_c"].toDouble();
+        image = response["data"]["weather"]["condition"]["icon"];
         await SharePref.setTemp(temp);
         await SharePref.setAqi(AQI);
         await SharePref.setHumidity(humidity);
         await SharePref.setWind(wind);
+        await SharePref.setWeatherImage(image);
         isWeatherFetched = true;
       } else {
         print("Failed to fetch weather data: Response is null.");
@@ -164,6 +166,7 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
             humidity: humidity,
             wind: wind,
             currentAddress: currentAddress,
+            image: image
           ),
           SizedBox(height: 5.v),
           Expanded(

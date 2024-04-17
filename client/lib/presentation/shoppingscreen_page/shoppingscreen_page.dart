@@ -24,6 +24,7 @@ int humidity = 0;
 double wind = 0.00;
 double temp = 0.0;
 String currentAddress = "";
+String image = "";
 
 class _ShoppingscreenPageState extends State<ShoppingscreenPage> {
   bool isLoading = true;
@@ -43,7 +44,7 @@ class _ShoppingscreenPageState extends State<ShoppingscreenPage> {
     humidity = (await SharePref.getHumidity()!);
     wind = (await SharePref.getWind()!);
     currentAddress = (await SharePref.getAdress())!;
-    print(temp);
+    image = (await SharePref.getWeatherImage()!);
   }
 
   Future<void> _fetchData() async {
@@ -97,11 +98,13 @@ class _ShoppingscreenPageState extends State<ShoppingscreenPage> {
       child: Column(
         children: [
           Header(
-              temp: temp,
-              aqi: AQI,
-              humidity: humidity,
-              wind: wind,
-              currentAddress: currentAddress),
+            temp: temp,
+            aqi: AQI,
+            humidity: humidity,
+            wind: wind,
+            currentAddress: currentAddress,
+            image: image,
+          ),
           SizedBox(height: 5.v),
           Container(
             padding: EdgeInsets.symmetric(

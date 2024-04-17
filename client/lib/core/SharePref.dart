@@ -26,6 +26,11 @@ class SharePref {
 
   static double? getWind() => _preferences?.getDouble("wind");
 
+  static Future setWeatherImage(String url) async =>
+      await _preferences?.setString("weatherImage", url);
+
+  static String? getWeatherImage() => _preferences?.getString("weatherImage");
+
   static Future setLangtitude(double langtitude) async =>
       await _preferences?.setDouble("langtitude", langtitude);
 
