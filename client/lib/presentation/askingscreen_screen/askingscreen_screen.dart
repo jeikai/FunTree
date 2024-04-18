@@ -23,7 +23,7 @@ class AskingscreenScreen extends StatefulWidget {
 Map<String, Object> data = {};
 
 class AskingscreenScreenState extends State<AskingscreenScreen> {
-  AbQuestion question = q0;
+  AbQuestion? question = q0;
 
   @override
   Widget build(BuildContext context) {
@@ -61,31 +61,48 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
 
   // On tap on any answer or on submit input cell
   void _onTap(Object answer) {
+    // check if the current question is not null
+    if (question == null) {
+      return;
+    }
     print("onTap: $answer");
     // save the answer to the data map, store the answer with the key is the question id
-    data[question.id] = answer;
+    data[question!.id] = answer;
     // check the current question is a type of Question or InputQuestion
     if (question is Question) {
       // if current question is a type of Question, then get the next question by the answer
       // answers is a map of next question with the key is the answer
       setState(() {
-        question = (question as Question).answers[answer]!;
+        question = (question as Question).answers[answer];
+        if (question == null) {
+          // if the next question is null, then call the onLastQuestion function
+          _onLastQuestion();
+        }
       });
     } else if (question is InputQuestion &&
         (question as InputQuestion).nextQuestion != null) {
       // if current question is a type of InputQuestion, then get the next question by the nextQuestion
       setState(() {
-        question = (question as InputQuestion).nextQuestion!;
+        question = (question as InputQuestion).nextQuestion;
+        if (question == null) {
+          // if the next question is null, then call the onLastQuestion function
+          _onLastQuestion();
+        }
       });
     } else {
-      //when the current question is the last question, then submit the data
-
-      print("data: $data");
-      //TODO: Upload data to server
-
-      // then navigate to the camera screen
-      Navigator.pushNamed(context, AppRoutes.camerascreenScreen);
+      _onLastQuestion();
     }
+  }
+
+  /// This is the function that will be called when the current question is the last question
+  _onLastQuestion() {
+    //when the current question is the last question, then submit the data
+
+    print("data: $data");
+    //TODO: Upload data to server
+
+    // then navigate to the camera screen
+    Navigator.pushNamed(context, AppRoutes.camerascreenScreen);
   }
 
   /// This is the place that mapping from Question Data structure to Widget

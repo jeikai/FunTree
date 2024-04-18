@@ -1,5 +1,11 @@
+
+/// Abstract class for a question
 class AbQuestion {
+  /// id is the unique identifier of the question
+  /// this also the key of the answer data which will be sent to the server
   String id;
+
+  /// questionText is the text of the question
   String questionText;
 
   AbQuestion({required this.id, required this.questionText});
@@ -52,7 +58,7 @@ class Question extends AbQuestion {
 }
 
 /// Question
-/// Answer special prefix:
+/// AnswerCell special prefix: (for answer string only)
 /// r- : Create a recommendation cell for next line until '/n'
 
 Question q0 = Question(
