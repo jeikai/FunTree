@@ -7,22 +7,14 @@ const messageSchema = new mongoose.Schema({
 const Message = mongoose.model('Message', messageSchema);
 
 const addChatHistory = async (user, model) => {
-	const userChat = new ChatHistory({
-		role: 'user',
-		parts: [
-			{
-				text: user, 
-			},
-		],
+	const userChat = new Message({
+		message: user,
+		sender: 'user'
 	});
 	await userChat.save();
-	const modelChat = new ChatHistory({
-		role: 'model',
-		parts: [
-			{
-				text: model,
-			},
-		],
+	const modelChat = new Message({
+		message: model,
+		sender: 'bot'
 	});
 	await modelChat.save();
 	return { userChat, modelChat };
