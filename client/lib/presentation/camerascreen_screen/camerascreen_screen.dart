@@ -13,9 +13,6 @@ import 'package:funtree/widgets/app_bar/appbar_leading_image.dart';
 import 'package:funtree/widgets/app_bar/appbar_title.dart';
 import 'package:funtree/widgets/app_bar/custom_app_bar.dart';
 import 'package:funtree/widgets/camera/camera.dart';
-import 'package:funtree/widgets/custom_elevated_button.dart';
-import 'package:funtree/widgets/custom_icon_button.dart';
-import 'package:google_ml_kit/google_ml_kit.dart';
 class CamerascreenScreen extends StatefulWidget {
   const CamerascreenScreen({super.key});
 
@@ -89,9 +86,8 @@ class _CamerascreenScreenState extends State<CamerascreenScreen> with SingleTick
   }
 
   onTapMultiply(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.homescreenScreen);
+    Navigator.pushNamed(context, AppRoutes.navigationMenu);
   }
-
 }
 
 class Bound extends ChangeNotifier {
