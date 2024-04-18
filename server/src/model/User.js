@@ -37,7 +37,7 @@ exports.get = async function (data) {
         let query = {}
         if (data.id) query._id = data.id
         if (data.email) query.email = data.email
-        const user = await User.findOne(query).lean()
+        const user = await User.findOne(query).lean().populate("listMessage")
         return user
     } catch (e) {
         return { error: e }

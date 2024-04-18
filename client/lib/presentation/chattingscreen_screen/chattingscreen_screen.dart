@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:funtree/core/SharePref.dart';
 import 'package:funtree/core/app_export.dart';
 import 'package:funtree/presentation/chattingscreen_screen/threedot.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -30,7 +31,21 @@ class _ChattingscreenScreenState extends State<ChattingscreenScreen> {
     super.dispose();
   }
 
-  void addData() async {}
+  void addData() async {
+    String userId = (await SharePref.getUserId()!);
+    var response = await Api().getData('chat/' + userId);
+
+    for (var messageData in response!["data"]["history"]) {
+      setState(() {
+        ChatMessage message = ChatMessage(
+          text: messageData["message"],
+          sender: messageData["sender"],
+          isImage: false,
+        );
+        _message.insert(0, message);
+      });
+    }
+  }
 
   void _sendMessage() async {
     if (messageController.text.isEmpty) return;
@@ -43,9 +58,10 @@ class _ChattingscreenScreenState extends State<ChattingscreenScreen> {
     Map<String, dynamic> request = {
       "prompt": messageController.text,
     };
+    String userId = (await SharePref.getUserId()!);
     messageController.clear();
-    var response = await Api().postData("Chatbot", request);
-    insertNewData(response!["response"]);
+    var response = await Api().postData("chat/" + userId, request);
+    insertNewData(response!["data"]["response"]["modelChat"]["message"]);
   }
 
   void insertNewData(String response, {bool isImage = false}) {
@@ -151,7 +167,6 @@ class _ChattingscreenScreenState extends State<ChattingscreenScreen> {
                 hintStyle: TextStyle(
                   color: Color.fromRGBO(73, 136, 85, 1),
                   fontSize: 20.0,
-                  fontFamily: 'Paytone One',
                   fontWeight: FontWeight.w300,
                 ),
                 border: InputBorder.none,

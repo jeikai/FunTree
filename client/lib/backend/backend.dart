@@ -66,4 +66,24 @@ class Api {
       return null;
     }
   }
+  Future<List<dynamic>?> getDataMessage(String path) async {
+    final Uri uri = Uri.parse(baseUrl + path);
+    try {
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+      };
+      final http.Response response =
+      await http.post(uri, headers: headers);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        List<dynamic> jsonResponse = jsonDecode(response.body);
+        return jsonResponse;
+      } else {
+        print('Có lỗi xảy ra: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Lỗi: $e');
+      return null;
+    }
+  }
 }
