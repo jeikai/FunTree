@@ -153,7 +153,7 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
   }
 
   Widget _buildInputCell(BuildContext context, InputType inputType) {
-    return InputCellResolver.resolve(context, inputType, question, data, _onTap);
+    return InputCellResolver.resolve(context, inputType, question!, data, _onTap);
   }
 
   /// Casual AppBar for this screen
