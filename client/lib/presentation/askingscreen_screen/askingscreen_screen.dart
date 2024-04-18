@@ -3,6 +3,8 @@ import 'package:funtree/core/app_export.dart';
 import 'package:funtree/core/question.dart';
 import 'package:funtree/widgets/app_bar/appbar_trailing_button.dart';
 import 'package:funtree/widgets/app_bar/custom_app_bar.dart';
+import 'package:funtree/widgets/asking/answer_cell.dart';
+import 'package:funtree/widgets/asking/input_cell_resolver.dart';
 
 class AskingscreenScreen extends StatefulWidget {
   const AskingscreenScreen({Key? key})
@@ -14,9 +16,14 @@ class AskingscreenScreen extends StatefulWidget {
   State<StatefulWidget> createState() => AskingscreenScreenState();
 }
 
+/// Data map to store the answers
+/// This will be made public to be accessed from other screens
+/// If you want to reset the data, just set it to an empty map
+/// Remember to reset the data before navigating to this screen again
+Map<String, Object> data = {};
+
 class AskingscreenScreenState extends State<AskingscreenScreen> {
   AbQuestion question = q0;
-  Map<String, Object> data = {};
 
   @override
   Widget build(BuildContext context) {
@@ -44,10 +51,6 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
                 ),
               ),
               SizedBox(height: 32.v),
-              // _buildHowWouldYouLike(context),
-              // SizedBox(height: 21.v),
-              // _buildSeventyFour(context),
-              // SizedBox(height: 5.v),
               ..._buildAnswers(context),
             ],
           ),
@@ -56,52 +59,68 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
     );
   }
 
+  // On tap on any answer or on submit input cell
   void _onTap(Object answer) {
     print("onTap: $answer");
+    // save the answer to the data map, store the answer with the key is the question id
     data[question.id] = answer;
+    // check the current question is a type of Question or InputQuestion
     if (question is Question) {
+      // if current question is a type of Question, then get the next question by the answer
+      // answers is a map of next question with the key is the answer
       setState(() {
         question = (question as Question).answers[answer]!;
       });
     } else if (question is InputQuestion &&
         (question as InputQuestion).nextQuestion != null) {
+      // if current question is a type of InputQuestion, then get the next question by the nextQuestion
       setState(() {
         question = (question as InputQuestion).nextQuestion!;
       });
     } else {
+      //when the current question is the last question, then submit the data
+
       print("data: $data");
+      //TODO: Upload data to server
+
+      // then navigate to the camera screen
+      Navigator.pushNamed(context, AppRoutes.camerascreenScreen);
     }
   }
 
+  /// This is the place that mapping from Question Data structure to Widget
+  /// Each AbQuestion has a different way to display
+  /// Question is a type of AbQuestion that has a list of answers so it will be displayed as a list of answers
+  /// InputQuestion is a type of AbQuestion that has an inputType so it will be displayed as an input cell
   List<Widget> _buildAnswers(BuildContext context) {
+    // List of widgets that will be displayed
     List<Widget> widgets = [];
+    // Check the current question is a type of Question or InputQuestion
     if (question is Question) {
+      // if current question is a type of Question, then get the answers and display them
+      // each answer will be displayed as an AnswerCell, gap between each answer is 21.v
       (question as Question).answers.forEach((key, value) {
         widgets.add(_buildAnswerCell(context, key));
         widgets.add(SizedBox(height: 21.v));
       });
     } else if (question is InputQuestion) {
+      // if current question is a type of InputQuestion, then display an input cell
       widgets.add(_buildInputAnswerCell(
           context, (question as InputQuestion).inputType));
     }
     return widgets;
   }
 
-  /// Section Widget
+  /// This is the function to build an AnswerCell
   Widget _buildAnswerCell(BuildContext context, String answer) {
-    if (question is Question) {
-      return AnswerCell(
-        answer: answer,
-        onTap: _onTap,
-      );
-    } else if (question is InputQuestion) {
-      return _buildInputAnswerCell(
-          context, (question as InputQuestion).inputType);
-    } else {
-      return Container();
-    }
+    return AnswerCell(
+      answer: answer,
+      onTap: _onTap,
+    );
   }
 
+  /// This is the function to build an InputCell
+  /// This uses InputCellResolver to resolve the inputType to the corresponding widget
   Widget _buildInputAnswerCell(BuildContext context, InputType inputType) {
     return Container(
       padding: EdgeInsets.symmetric(
@@ -111,272 +130,16 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
       decoration: AppDecoration.fillLightGreen.copyWith(
         borderRadius: BorderRadiusStyle.roundedBorder10,
       ),
+      /// This function will return the corresponding widget based on the inputType
       child: _buildInputCell(context, inputType),
     );
   }
 
   Widget _buildInputCell(BuildContext context, InputType inputType) {
-    switch (inputType) {
-      case InputType.text:
-        return TextField(
-          style: CustomTextStyles.bodyMediumGray600,
-          decoration: InputDecoration(
-            hintText:
-                (question as InputQuestion).placeholder ?? "Enter your answer",
-            hintStyle: CustomTextStyles.bodyMediumGray600,
-          ),
-          onSubmitted: (value) {
-            _onTap(value);
-          },
-          onChanged: (value) {
-            data[question.id] = value;
-          },
-        );
-      case InputType.number:
-        return TextField(
-          style: CustomTextStyles.bodyMediumGray600,
-          decoration: InputDecoration(
-            hintText:
-                (question as InputQuestion).placeholder ?? "Enter your answer",
-            hintStyle: CustomTextStyles.bodyMediumGray600,
-          ),
-          keyboardType: TextInputType.number,
-          onSubmitted: (value) {
-            _onTap(value);
-          },
-          onChanged: (value) {
-            data[question.id] = value;
-          },
-        );
-      case InputType.date:
-        return TextField(
-          style: CustomTextStyles.bodyMediumGray600,
-          decoration: InputDecoration(
-            hintText:
-                (question as InputQuestion).placeholder ?? "Enter your answer",
-            hintStyle: CustomTextStyles.bodyMediumGray600,
-          ),
-          keyboardType: TextInputType.datetime,
-          onSubmitted: (value) {
-            _onTap(value);
-          },
-          onChanged: (value) {
-            data[question.id] = value;
-          },
-        );
-      case InputType.time:
-        return TextField(
-          style: CustomTextStyles.bodyMediumGray600,
-          decoration: InputDecoration(
-            hintText:
-                (question as InputQuestion).placeholder ?? "Enter your answer",
-            hintStyle: CustomTextStyles.bodyMediumGray600,
-          ),
-          keyboardType: TextInputType.datetime,
-          onSubmitted: (value) {
-            _onTap(value);
-          },
-          onChanged: (value) {
-            data[question.id] = value;
-          },
-        );
-      case InputType.dateTime:
-        return TextField(
-          style: CustomTextStyles.bodyMediumGray600,
-          decoration: InputDecoration(
-            hintText:
-                (question as InputQuestion).placeholder ?? "Enter your answer",
-            hintStyle: CustomTextStyles.bodyMediumGray600,
-          ),
-          keyboardType: TextInputType.datetime,
-          onSubmitted: (value) {
-            _onTap(value);
-          },
-          onChanged: (value) {
-            data[question.id] = value;
-          },
-        );
-      case InputType.email:
-        return TextField(
-          style: CustomTextStyles.bodyMediumGray600,
-          decoration: InputDecoration(
-            hintText:
-                (question as InputQuestion).placeholder ?? "Enter your answer",
-            hintStyle: CustomTextStyles.bodyMediumGray600,
-          ),
-          keyboardType: TextInputType.emailAddress,
-          onSubmitted: (value) {
-            _onTap(value);
-          },
-          onChanged: (value) {
-            data[question.id] = value;
-          },
-        );
-      case InputType.phone:
-        return TextField(
-          style: CustomTextStyles.bodyMediumGray600,
-          decoration: InputDecoration(
-            hintText:
-                (question as InputQuestion).placeholder ?? "Enter your answer",
-            hintStyle: CustomTextStyles.bodyMediumGray600,
-          ),
-          keyboardType: TextInputType.phone,
-          onSubmitted: (value) {
-            _onTap(value);
-          },
-          onChanged: (value) {
-            data[question.id] = value;
-          },
-        );
-      case InputType.url:
-        return TextField(
-          style: CustomTextStyles.bodyMediumGray600,
-          decoration: InputDecoration(
-            hintText:
-                (question as InputQuestion).placeholder ?? "Enter your answer",
-            hintStyle: CustomTextStyles.bodyMediumGray600,
-          ),
-          keyboardType: TextInputType.url,
-          onSubmitted: (value) {
-            _onTap(value);
-          },
-          onChanged: (value) {
-            data[question.id] = value;
-          },
-        );
-      case InputType.password:
-        return TextField(
-          style: CustomTextStyles.bodyMediumGray600,
-          decoration: InputDecoration(
-            hintText:
-                (question as InputQuestion).placeholder ?? "Enter your answer",
-            hintStyle: CustomTextStyles.bodyMediumGray600,
-          ),
-          keyboardType: TextInputType.visiblePassword,
-          onSubmitted: (value) {
-            _onTap(value);
-          },
-          onChanged: (value) {
-            data[question.id] = value;
-          },
-        );
-      case InputType.file:
-        return TextField(
-          style: CustomTextStyles.bodyMediumGray600,
-          decoration: InputDecoration(
-            hintText:
-                (question as InputQuestion).placeholder ?? "Enter your answer",
-            hintStyle: CustomTextStyles.bodyMediumGray600,
-          ),
-          keyboardType: TextInputType.text,
-          onSubmitted: (value) {
-            _onTap(value);
-          },
-          onChanged: (value) {
-            data[question.id] = value;
-          },
-        );
-      case InputType.month:
-        return TextField(
-          style: CustomTextStyles.bodyMediumGray600,
-          decoration: InputDecoration(
-            hintText:
-                (question as InputQuestion).placeholder ?? "Enter your answer",
-            hintStyle: CustomTextStyles.bodyMediumGray600,
-          ),
-          keyboardType: TextInputType.datetime,
-          onSubmitted: (value) {
-            _onTap(value);
-          },
-          onChanged: (value) {
-            data[question.id] = value;
-          },
-        );
-      case InputType.week:
-        return TextField(
-          style: CustomTextStyles.bodyMediumGray600,
-          decoration: InputDecoration(
-            hintText:
-                (question as InputQuestion).placeholder ?? "Enter your answer",
-            hintStyle: CustomTextStyles.bodyMediumGray600,
-          ),
-          keyboardType: TextInputType.datetime,
-          onSubmitted: (value) {
-            _onTap(value);
-          },
-          onChanged: (value) {
-            data[question.id] = value;
-          },
-        );
-      case InputType.range:
-        return TextField(
-          style: CustomTextStyles.bodyMediumGray600,
-          decoration: InputDecoration(
-            hintText:
-                (question as InputQuestion).placeholder ?? "Enter your answer",
-            hintStyle: CustomTextStyles.bodyMediumGray600,
-          ),
-          keyboardType: TextInputType.number,
-          onSubmitted: (value) {
-            _onTap(value);
-          },
-          onChanged: (value) {
-            data[question.id] = value;
-          },
-        );
-      case InputType.search:
-        return TextField(
-          style: CustomTextStyles.bodyMediumGray600,
-          decoration: InputDecoration(
-            hintText:
-                (question as InputQuestion).placeholder ?? "Enter your answer",
-            hintStyle: CustomTextStyles.bodyMediumGray600,
-          ),
-          keyboardType: TextInputType.text,
-          onSubmitted: (value) {
-            _onTap(value);
-          },
-          onChanged: (value) {
-            data[question.id] = value;
-          },
-        );
-      case InputType.tel:
-        return TextField(
-          style: CustomTextStyles.bodyMediumGray600,
-          decoration: InputDecoration(
-            hintText:
-                (question as InputQuestion).placeholder ?? "Enter your answer",
-            hintStyle: CustomTextStyles.bodyMediumGray600,
-          ),
-          keyboardType: TextInputType.phone,
-          onSubmitted: (value) {
-            _onTap(value);
-          },
-          onChanged: (value) {
-            data[question.id] = value;
-          },
-        );
-      case InputType.timeLocal:
-        return TextField(
-          style: CustomTextStyles.bodyMediumGray600,
-          decoration: InputDecoration(
-            hintText:
-                (question as InputQuestion).placeholder ?? "Enter your answer",
-            hintStyle: CustomTextStyles.bodyMediumGray600,
-          ),
-          keyboardType: TextInputType.datetime,
-          onSubmitted: (value) {
-            _onTap(value);
-          },
-          onChanged: (value) {
-            data[question.id] = value;
-          },
-        );
-      case InputType.color:
-        return Container();
-    }
+    return InputCellResolver.resolve(context, inputType, question, data, _onTap);
   }
 
+  /// Casual AppBar for this screen
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       height: 52.v,
@@ -440,73 +203,4 @@ class AskingscreenScreenState extends State<AskingscreenScreen> {
       ],
     );
   }
-}
-
-class AnswerCell extends StatelessWidget {
-  final String answer;
-  final Function(String) onTap;
-
-  const AnswerCell({super.key, required this.answer, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    List<String> lines = splitString(answer);
-    List<Widget> widgets = [];
-    for (var line in lines) {
-      var (isR, text) = isRecommended(line);
-      widgets.add(Text(
-        text,
-        style: isR
-            ? CustomTextStyles.bodyMediumOnError
-            : CustomTextStyles.bodyMediumGray600,
-      ));
-      widgets.add(SizedBox(height: 4.v));
-    }
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 6.h,
-        vertical: 7.v,
-      ),
-      decoration: AppDecoration.fillLightGreen.copyWith(
-        borderRadius: BorderRadiusStyle.roundedBorder10,
-      ),
-      child: InkWell(
-        onTap: () {
-          onTap(answer);
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                left: 3.h,
-                top: 2.v,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [...widgets],
-              ),
-            ),
-            CustomImageView(
-              imagePath: ImageConstant.imgForward,
-              height: 15.adaptSize,
-              width: 15.adaptSize,
-              margin: EdgeInsets.symmetric(vertical: 11.v),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-List<String> splitString(String input) {
-  return input.split(" /n ");
-}
-
-(bool, String) isRecommended(String input) {
-  if (input.startsWith("r-")) {
-    return (true, input.substring(2));
-  }
-  return (false, input);
 }

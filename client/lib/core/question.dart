@@ -39,6 +39,7 @@ enum InputType {
   timeLocal
 }
 
+
 class Question extends AbQuestion {
   Map<String, AbQuestion> answers = {};
 
@@ -49,6 +50,10 @@ class Question extends AbQuestion {
       : answers = a,
         super(id: id, questionText: q);
 }
+
+/// Question
+/// Answer special prefix:
+/// r- : Create a recommendation cell for next line until '/n'
 
 Question q0 = Question(
     id: "type",
