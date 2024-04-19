@@ -13,6 +13,7 @@ class TreeObject extends ChangeNotifier {
 
   String get imagePath {
     var temp = ImageConstant.imgTree;
+
     treeList.forEach((element) {
       if (element.uuid != uuid) return;
       temp = element.imagePath;

@@ -1,3 +1,5 @@
+import 'package:funtree/backend/backend.dart';
+import 'package:funtree/core/SharePref.dart';
 import 'package:funtree/core/utils/image_constant.dart';
 import 'package:uuid/uuid.dart';
 
@@ -41,71 +43,41 @@ List<Tree> treeList = [
       temperature: "29°",
       aqi: "112",
       humidity: "95%",
-      wind: "13 km/h"),
-  Tree(
-      name: "Fun Tree 2",
-      address: "Hanoi",
-      temperature: "29°",
-      aqi: "112",
-      humidity: "95%",
-      wind: "13 km/h"),
-  Tree(
-      name: "Fun Tree 3",
-      address: "Hanoi",
-      temperature: "29°",
-      aqi: "112",
-      humidity: "95%",
-      wind: "13 km/h"),
-  Tree(
-      name: "Fun Tree 4",
-      address: "Hanoi",
-      temperature: "29°",
-      aqi: "112",
-      humidity: "95%",
-      wind: "13 km/h"),
-  Tree(
-      name: "Fun Tree 5",
-      address: "Hanoi",
-      temperature: "29°",
-      aqi: "112",
-      humidity: "95%",
-      wind: "13 km/h"),
-  Tree(
-      name: "Fun Tree 6",
-      address: "Hanoi",
-      temperature: "29°",
-      aqi: "112",
-      humidity: "95%",
-      wind: "13 km/h"),
-  Tree(
-      name: "Fun Tree 7",
-      address: "Hanoi",
-      temperature: "29°",
-      aqi: "112",
-      humidity: "95%",
-      wind: "13 km/h"),
-  Tree(
-      name: "Fun Tree 8",
-      address: "Hanoi",
-      temperature: "29°",
-      aqi: "112",
-      humidity: "95%",
-      wind: "13 km/h"),
-  Tree(
-      name: "Fun Tree 9",
-      address: "Hanoi",
-      temperature: "29°",
-      aqi: "112",
-      humidity: "95%",
-      wind: "13 km/h"),
-  Tree(
-      name: "Fun Tree 10",
-      address: "Hanoi",
-      temperature: "29°",
-      aqi: "112",
-      humidity: "95%",
-      wind: "13 km/h"),
+      wind: "13 km/h")
 ];
+
+Future<void> getData() async {
+  try {
+    var response = await Api().getData('plant');
+    for (var item in response!["response"]) {
+      String name = item['name'] ?? "Tree";
+      String imagePath = item['url'] ?? ImageConstant.imgTree;
+      int AQI = 0;
+      int humidity = 0;
+      double wind = 0.00;
+      double temp = 0.0;
+      String currentAddress = "";
+      temp = (await SharePref.getTemp())!;
+      AQI = (await SharePref.getAqi()!);
+      humidity = (await SharePref.getHumidity()!);
+      wind = (await SharePref.getWind()!);
+      currentAddress = (await SharePref.getAdress())!;
+      Tree tree = Tree(
+          name: name,
+          address: currentAddress,
+          temperature: temp as String,
+          aqi: AQI as String,
+          humidity: humidity as String,
+          wind: wind as String,
+          imagePath: imagePath);
+      treeList.add(tree);
+    }
+    print(treeList);
+    print("hioii");
+  } catch (e) {
+    print(e);
+  }
+}
 
 List<int> _isPlaced = [];
 
