@@ -12,8 +12,11 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary,
   allowedFormats: ['jpg', 'png'],
+  params: async (req, res) => {
+    console.log(req.body.file)
+  }
 });
-
+ 
 const uploadCloud = multer({ storage });
 
 module.exports = uploadCloud;

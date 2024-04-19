@@ -39,7 +39,6 @@ const addChatHistory = async (userId, userMessage, modelMessage) => {
 
 const getAllHistory = async (userId) => {
 	const user = await User.get(userId);
-	console.log(user)
 	if (!user) {
 	  throw new Error('User not found');
 	}

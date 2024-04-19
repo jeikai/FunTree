@@ -1,11 +1,9 @@
 import axios from 'axios';
 import { PLANT_ID_URL } from '@/config/const';
-import storage from '@/config/googleStorage.js';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import fs from 'fs';
 import { joinNameWithMimeType, normalizeString } from '../utils/utils.js';
 import Plant from '@/model/Plant.js';
 import sharp from 'sharp';
+require('dotenv').config()
 
 export const identifyPlant = async (req, res) => {
 	try {
@@ -13,7 +11,7 @@ export const identifyPlant = async (req, res) => {
 		lat = parseFloat(lat);
 		lng = parseFloat(lng);
 
-		const imageData = Buffer.from(images); 
+		const imageData = Buffer.from(images);
 		const base64Image = imageData.toString('base64');
 
 		const plantIdentification = await axios.post(
@@ -26,7 +24,7 @@ export const identifyPlant = async (req, res) => {
 			{
 				headers: {
 					'Content-Type': 'application/json',
-					'Api-Key': 'mLtpAB43sQtLog4jdQwziQsgoGxl9sGEsS6xTEJD4WBAXoJOxx',
+					'Api-Key': process.env.PLANT_ID_API_KEY,
 				},
 				params: {
 					details:
@@ -34,7 +32,6 @@ export const identifyPlant = async (req, res) => {
 				},
 			}
 		);
-
 		const { access_token, result, input } = plantIdentification.data;
 		const isPlant = result.is_plant.binary;
 
@@ -62,32 +59,14 @@ export const identifyPlant = async (req, res) => {
 
 			const healthResult = healthAssessment.data;
 
-			const data = {
-				plant_id: plantInfo.id,
-				name: plantInfo.name,
-				common_names: normalizeString(plantInfo.details.common_names[0]),
-				url: plantInfo.details.url,
-				description:
-					plantInfo.details.description != null
-						? plantInfo.details.description.value
-						: 'No description available',
-				edible_parts: plantInfo.details.edible_parts,
-				watering: {
-					max: plantInfo.details.watering.max,
-					min: plantInfo.details.watering.min,
-				},
-				image: `${input.images[0]}`,
-			};
-
-			const newPlant = await Plant.addNewPlant(data);
-
 			return res.status(200).json({
 				status: true,
 				message: 'Plant identified successfully',
 				data: {
 					plantInfo: plantInfo,
 					healthAssessment: healthResult.result,
-				},
+					imageBase64: base64Image
+				},  
 			});
 		} else {
 			return res.status(400).json({
@@ -127,3 +106,60 @@ export const identifyPlant = async (req, res) => {
 		});
 	}
 };
+
+export const createPlant = async (req, res) => {
+	try {
+		const data = req.body;
+		const response = await Plant.addNewPlant(data)
+		if( !response) {
+			return res.status(400).json({
+				status: false,
+				message: "Created unsuccessfully",
+			});
+		}
+		return res.status(200).json({
+			status: true,
+			message: 'Plant created successfully',
+			data: {
+				response: response
+			},
+		});
+	} catch (error) {
+		console.log(error)
+		return res.status(500).json({
+			status: false,
+			message: error,
+		});
+	}
+}
+
+export const deleteAllPlant = async (req, res) => {
+	try {
+		const response = await Plant.deletePlant()
+		return res.status(200).json({
+			status: true,
+			response: response
+		})
+	} catch (error) {
+		return res.status(500).json({
+			status: false,
+			message: error,
+		});
+	}
+}
+
+export const getAllPlant = async (req, res) => {
+	try {
+		const response = await Plant.getAll();
+		return res.status(200).json({
+			status: true,
+			response: response
+		})
+	} catch (error) {
+		console.log(error)
+		return res.status(500).json({
+			status: false,
+			message: error,
+		});
+	}
+}

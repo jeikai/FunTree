@@ -10,6 +10,7 @@ import 'package:funtree/core/map/map.dart';
 import 'package:funtree/core/utils/image_constant.dart';
 import 'package:funtree/core/utils/size_utils.dart';
 import 'package:funtree/presentation/homescreen_screen/homescreen_screen.dart';
+import 'package:funtree/presentation/plant_detail_screen/plantdetail_screen.dart';
 import 'package:funtree/widgets/ToastNoti.dart';
 import 'package:funtree/widgets/custom_icon_button.dart';
 import 'package:funtree/widgets/custom_image_view.dart';
@@ -33,6 +34,23 @@ onImage(InputImage inputImage) async {
   //   break;
   // }
   // print(' [$result]');
+}
+
+class Tree {
+  final String plantId;
+  final String name;
+  final String common_names;
+  final String description;
+  final String image_url;
+  final String imageBase64;
+
+  Tree(
+      {required this.plantId,
+      required this.name,
+      required this.common_names,
+      required this.description,
+      required this.image_url,
+      required this.imageBase64});
 }
 
 class CameraView extends StatefulWidget {
@@ -185,13 +203,25 @@ class _CameraViewState extends State<CameraView> {
       print("Before call api");
       final response = await sendToApi(Uint8List.fromList(bytes!));
       if (response != null) {
-        print(response);
-        final data = response['data'];
-        final tree = data['tree'];
-        final t = Tree(
-            id: tree['id'], name: tree['name'], imagePath: tree['imageUrl']);
-        treeList.add(t);
-        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        final data = response['data']['plantInfo'];
+        String plantId = data["id"];
+        String science_name = data["name"];
+        String common_name = data["details"]["common_names"][0];
+        String description = data["details"]["description"]["value"];
+        String image_url = data["details"]["image"]["value"];
+        String imageBase64 = response['data']['imageBase64'];
+        Tree tree = new Tree(
+            plantId: plantId,
+            name: science_name,
+            common_names: common_name,
+            description: description,
+            image_url: image_url,
+            imageBase64: imageBase64);
+        _isSearch.value = false;
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => PlantDetailScreen(tree: tree)));
       } else {
         ToastNoti.show("No plant detected");
       }
@@ -207,7 +237,6 @@ class _CameraViewState extends State<CameraView> {
     data['images'] = bytes;
     data['lat'] = (await SharePref.getLangtitude()!);
     data['lng'] = (await SharePref.getLongtitude()!);
-    print(data);
     var response = Api().postData("plant/identification", data);
     return response;
   }

@@ -8,5 +8,5 @@ api.post('/api/upload', uploadCloud.single('file'), (req, res, next) => {
     }
     res.json({ file_url: req.file.path });
   });
-
+ 
 module.exports = api
