@@ -13,6 +13,7 @@ import 'package:funtree/widgets/app_bar/appbar_leading_image.dart';
 import 'package:funtree/widgets/app_bar/appbar_title.dart';
 import 'package:funtree/widgets/app_bar/custom_app_bar.dart';
 import 'package:funtree/widgets/camera/camera.dart';
+
 class CamerascreenScreen extends StatefulWidget {
   const CamerascreenScreen({super.key});
 
@@ -20,9 +21,11 @@ class CamerascreenScreen extends StatefulWidget {
   State<CamerascreenScreen> createState() => _CamerascreenScreenState();
 }
 
-class _CamerascreenScreenState extends State<CamerascreenScreen> with SingleTickerProviderStateMixin<CamerascreenScreen> {
+class _CamerascreenScreenState extends State<CamerascreenScreen>
+    with SingleTickerProviderStateMixin<CamerascreenScreen> {
   Ticker? _ticker;
-  final Duration tickDuration = Duration(microseconds: 500); // Set your desired tick duration here
+  final Duration tickDuration =
+      Duration(microseconds: 500); // Set your desired tick duration here
   Duration lastTick = Duration.zero;
 
   final listenable = Bound();
@@ -30,8 +33,7 @@ class _CamerascreenScreenState extends State<CamerascreenScreen> with SingleTick
   bool isCameraReady = false;
   late List<CameraDescription> _cameras;
 
-  Future<void> initCamera() async {
-  }
+  Future<void> initCamera() async {}
 
   @override
   void initState() {
@@ -97,6 +99,7 @@ class Bound extends ChangeNotifier {
     _a = value;
     notifyListeners();
   }
+
   get a => _a;
 }
 
@@ -115,6 +118,3 @@ class SquarePainter extends CustomPainter {
     return false;
   }
 }
-
-
-

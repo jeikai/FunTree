@@ -6,31 +6,20 @@ import fs from 'fs';
 import { joinNameWithMimeType, normalizeString } from '../utils/utils.js';
 import Plant from '@/model/Plant.js';
 import sharp from 'sharp';
-import {
-	GGMAP_GEOCODE_URL,
-	OPEN_WEATHER_URL,
-	GGMAP_AQI_URL,
-} from '../config/const.js';
 
 export const identifyPlant = async (req, res) => {
 	try {
-		const imgs = await req.files;
-		let { lat, lng } = req.body;
+		let { images, lat, lng } = req.body;
 		lat = parseFloat(lat);
 		lng = parseFloat(lng);
-		const image = imgs[0];
-		console.log('Image', image);
 
-		const encBase64Img = await sharp(image.path)
-			.toBuffer()
-			.then((data) => {
-				return data.toString('base64');
-			});
+		const imageData = Buffer.from(images); 
+		const base64Image = imageData.toString('base64');
 
 		const plantIdentification = await axios.post(
 			`${PLANT_ID_URL}/identification`,
 			{
-				images: encBase64Img,
+				images: base64Image,
 				latitude: lat,
 				longitude: lng,
 			},
@@ -50,16 +39,12 @@ export const identifyPlant = async (req, res) => {
 		const isPlant = result.is_plant.binary;
 
 		if (isPlant) {
-			const upload = await storage().bucket('fun_tree_plants').upload(image.path, {
-				destination: image.originalname,
-			});
-			const bucketBaseURL = `https://storage.googleapis.com/fun_tree_plants`;
 			const plantInfo = result.classification.suggestions[0];
 
 			const healthAssessment = await axios.post(
 				`${PLANT_ID_URL}/health_assessment`,
 				{
-					images: encBase64Img,
+					images: base64Image,
 					latitude: lat,
 					longitude: lng,
 				},
@@ -105,32 +90,37 @@ export const identifyPlant = async (req, res) => {
 				},
 			});
 		} else {
-			const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-			const model = genAI.getGenerativeModel({ model: 'gemini-pro-vision' });
+			return res.status(400).json({
+				status: false,
+				message: "Not a plant"
+			})
+			// const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+			// const model = genAI.getGenerativeModel({ model: 'gemini-pro-vision' });
 
-			const prompt =
-				'How can i recycle this? Please give clear instruction or guideline on how to recycle this item or how can i convert this to plants fertilizer.';
-			const fileToGenerativePart = (buffer, mimeType) => {
-				return {
-					inlineData: {
-						data: buffer,
-						mimeType,
-					},
-				};
-			};
-			const imageParts = [fileToGenerativePart(encBase64Img, image.mimetype)];
+			// const prompt =
+			// 	'How can i recycle this? Please give clear instruction or guideline on how to recycle this item or how can i convert this to plants fertilizer.';
+			// const fileToGenerativePart = (buffer, mimeType) => {
+			// 	return {
+			// 		inlineData: {
+			// 			data: buffer,
+			// 			mimeType,
+			// 		},
+			// 	};
+			// };
+			// const imageParts = [fileToGenerativePart(base64Image, image.mimetype)];
 
-			const result = await model.generateContent([prompt, ...imageParts]);
-			const response = await result.response;
-			const text = response.text();
+			// const result = await model.generateContent([prompt, ...imageParts]);
+			// const response = await result.response;
+			// const text = response.text();
 
-			return res.status(200).json({
-				status: true,
-				message: 'identified successfully',
-				data: { response: text },
-			});
+			// return res.status(200).json({
+			// 	status: true,
+			// 	message: 'identified successfully',
+			// 	data: { response: text },
+			// });
 		}
 	} catch (error) {
+		console.log(error)
 		return res.status(500).json({
 			status: false,
 			message: error,
