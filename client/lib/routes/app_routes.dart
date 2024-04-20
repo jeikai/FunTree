@@ -1,6 +1,4 @@
-
 import 'package:flutter/material.dart';
-import 'package:funtree/core/app_export.dart';
 import 'package:funtree/presentation/app_navigation_screen/navigation_menu.dart';
 import 'package:funtree/presentation/homescreen_screen/mapeditorscreen_screen/mapeditorscreen_screen.dart';
 import 'package:funtree/presentation/login_screen/login_screen.dart';
@@ -12,6 +10,7 @@ import 'package:funtree/presentation/communityscreen_screen/communityscreen_scre
 import 'package:funtree/presentation/chattingscreen_screen/chattingscreen_screen.dart';
 import 'package:funtree/presentation/app_navigation_screen/app_navigation_screen.dart';
 import 'package:funtree/presentation/logup_screen/logup_screen.dart';
+import 'package:funtree/presentation/profile/profile_screen.dart';
 
 class AppRoutes {
   static const String loginScreen = '/login_screen';
@@ -47,7 +46,9 @@ class AppRoutes {
 
   static const String navigationMenu = '/navigation_menu';
 
-  static const String  logUpScreen= '/logup_screen';
+  static const String logUpScreen = '/logup_screen';
+
+  static const String profileScreen = '/profile_screen';
 
   static Map<String, WidgetBuilder> routes = {
     loginScreen: (context) => LoginScreen(),
@@ -62,5 +63,6 @@ class AppRoutes {
     mapEditorScreen: (context) => MapEditorScreen(),
     navigationMenu: (context) => NavigationMenu(),
     logUpScreen: (context) => LogupScreen(),
+    profileScreen: (context) => ProfileScreen()
   };
 }

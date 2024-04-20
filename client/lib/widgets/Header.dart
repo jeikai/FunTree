@@ -5,21 +5,22 @@ import 'package:funtree/core/utils/image_constant.dart';
 import 'custom_image_view.dart';
 
 class Header extends StatelessWidget {
-  const Header({
-    Key? key,
-    required this.temp,
-    required this.aqi,
-    required this.humidity,
-    required this.wind,
-    required this.currentAddress,
-    required this.image
-  }) : super(key: key);
+  const Header(
+      {Key? key,
+      required this.temp,
+      required this.aqi,
+      required this.humidity,
+      required this.wind,
+      required this.currentAddress,
+      required this.image})
+      : super(key: key);
   final double temp;
   final int aqi;
   final int humidity;
   final double wind;
   final String currentAddress;
   final String image;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -36,6 +37,7 @@ class Header extends StatelessWidget {
   }
 
   Widget _buildLeftSide(BuildContext context) {
+
     return SizedBox(
       height: 92.v,
       width: 158.h,
@@ -56,9 +58,9 @@ class Header extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Image(
-                  image: NetworkImage("http:" + image),
-                    height: 60.adaptSize,
-                    width: 60.adaptSize
+                  image: image.isNotEmpty ? (NetworkImage('http:' + image) as ImageProvider) : AssetImage('assets/images/img_sun_behind_small.png'),
+                  height: 60.adaptSize,
+                  width: 60.adaptSize,
                 ),
                 Container(
                   width: 88.h,
@@ -99,16 +101,23 @@ class Header extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: 8.v, bottom: 5.v),
       child: Column(
-        children: [
+        children: [ 
           SizedBox(
             width: 97.h,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CustomImageView(
-                  imagePath: ImageConstant.imgCircledUserMale,
-                  height: 27.adaptSize,
-                  width: 27.adaptSize,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, AppRoutes.profileScreen);
+                  },
+                  child: Container(
+                    child: CustomImageView(
+                      imagePath: ImageConstant.imgCircledUserMale,
+                      height: 27.adaptSize,
+                      width: 27.adaptSize,
+                    ),
+                  ),
                 ),
                 GestureDetector(
                   onTap: () {
@@ -144,6 +153,7 @@ class Header extends StatelessWidget {
       ),
     );
   }
+
   String _formatAddress(String address) {
     if (address.length <= 97) {
       return address;
@@ -154,7 +164,9 @@ class Header extends StatelessWidget {
       endIndex++;
     }
 
-    return address.substring(0, endIndex.clamp(0, address.length)) + '\n' + address.substring(endIndex).trim();
+    return address.substring(0, endIndex.clamp(0, address.length)) +
+        '\n' +
+        address.substring(endIndex).trim();
   }
 }
 
