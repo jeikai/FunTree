@@ -34,6 +34,7 @@ class Input extends StatelessWidget {
         decoration: InputDecoration(
           filled: true,
           suffixIconColor: Color.fromRGBO(74, 134, 86, 1.0),
+          fillColor: Colors.transparent,
           suffixIcon: Icon,
           hintStyle: TextStyle(
             color: Color.fromRGBO(74, 134, 86, 1.0),

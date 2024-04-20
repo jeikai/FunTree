@@ -4,20 +4,27 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:funtree/backend/backend.dart';
+import 'package:funtree/core/SharePref.dart';
 import 'package:funtree/core/inventory/tree.dart';
 import 'package:funtree/core/map/map.dart';
 import 'package:funtree/core/utils/image_constant.dart';
 import 'package:funtree/core/utils/size_utils.dart';
 import 'package:funtree/presentation/homescreen_screen/homescreen_screen.dart';
+import 'package:funtree/presentation/plant_detail_screen/plantdetail_screen.dart';
+import 'package:funtree/widgets/ToastNoti.dart';
 import 'package:funtree/widgets/custom_icon_button.dart';
 import 'package:funtree/widgets/custom_image_view.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 
-final ObjectDetector objectDetector = GoogleMlKit.vision.objectDetector(options: ObjectDetectorOptions(mode: DetectionMode.stream, classifyObjects: true, multipleObjects: false));
+final ObjectDetector objectDetector = GoogleMlKit.vision.objectDetector(
+    options: ObjectDetectorOptions(
+        mode: DetectionMode.stream,
+        classifyObjects: true,
+        multipleObjects: false));
 final ImageLabeler imageLabeler = GoogleMlKit.vision.imageLabeler();
-onImage(InputImage inputImage) async {
 
+onImage(InputImage inputImage) async {
   // final List<DetectedObject> labels = await objectDetector.processImage(inputImage);
   // String result = '';
   // for (DetectedObject object in labels) {
@@ -29,14 +36,31 @@ onImage(InputImage inputImage) async {
   // print(' [$result]');
 }
 
+class Tree {
+  final String plantId;
+  final String name;
+  final String common_names;
+  final String description;
+  final String image_url;
+  final String imageBase64;
+
+  Tree(
+      {required this.plantId,
+      required this.name,
+      required this.common_names,
+      required this.description,
+      required this.image_url,
+      required this.imageBase64});
+}
+
 class CameraView extends StatefulWidget {
   CameraView(
       {Key? key,
-        required this.onImage,
-        this.onCameraFeedReady,
-        this.onDetectorViewModeChanged,
-        this.onCameraLensDirectionChanged,
-        this.initialCameraLensDirection = CameraLensDirection.back})
+      required this.onImage,
+      this.onCameraFeedReady,
+      this.onDetectorViewModeChanged,
+      this.onCameraLensDirectionChanged,
+      this.initialCameraLensDirection = CameraLensDirection.back})
       : super(key: key);
 
   final Function(InputImage inputImage) onImage;
@@ -126,14 +150,17 @@ class _CameraViewState extends State<CameraView> {
           alignment: Alignment.bottomCenter,
           child: _buildFiftySix(context),
         ),
-        ValueListenableBuilder(valueListenable: _isSearch, builder: (context, value, child) {
-          return value ?
-          Container(
-              color: Colors.white.withOpacity(0.5),
-              height: 800.v,
-              width: 360.h,
-              child: Loading) : SizedBox();
-          }),
+        ValueListenableBuilder(
+            valueListenable: _isSearch,
+            builder: (context, value, child) {
+              return value
+                  ? Container(
+                      color: Colors.white.withOpacity(0.5),
+                      height: 800.v,
+                      width: 360.h,
+                      child: Loading)
+                  : SizedBox();
+            }),
       ],
     );
   }
@@ -142,33 +169,29 @@ class _CameraViewState extends State<CameraView> {
   Widget _buildFiftySix(BuildContext context) {
     return Container(
         height: 180.v,
-        child: Stack(
-            children: [
-              Center(
-                  child:CustomIconButton(
-                    height: 80.adaptSize,
-                    width: 80.adaptSize,
-                    padding: EdgeInsets.all(19.h),
-                    child: CustomImageView(
-                        imagePath: ImageConstant.imgSearch80x80),
-                    onTap: () {
-                      onSearch();
-                    }
-                  )
-              ),
-              Align(
-                  alignment: Alignment.bottomRight,
-                  child: Padding(
-                      padding: EdgeInsets.only(bottom: 10.adaptSize, right: 10.adaptSize),
-                      child: CustomIconButton(
-                          height: 40.adaptSize,
-                          width: 40.adaptSize,
-                          padding: EdgeInsets.all(10.h),
-                          child:
-                          CustomImageView(imagePath: ImageConstant.imgGroup6)))
-              ),
-
-            ]));
+        child: Stack(children: [
+          Center(
+              child: CustomIconButton(
+                  height: 80.adaptSize,
+                  width: 80.adaptSize,
+                  padding: EdgeInsets.all(19.h),
+                  child:
+                      CustomImageView(imagePath: ImageConstant.imgSearch80x80),
+                  onTap: () {
+                    onSearch();
+                  })),
+          Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                  padding: EdgeInsets.only(
+                      bottom: 10.adaptSize, right: 10.adaptSize),
+                  child: CustomIconButton(
+                      height: 40.adaptSize,
+                      width: 40.adaptSize,
+                      padding: EdgeInsets.all(10.h),
+                      child: CustomImageView(
+                          imagePath: ImageConstant.imgGroup6)))),
+        ]));
   }
 
   onSearch() async {
@@ -177,17 +200,30 @@ class _CameraViewState extends State<CameraView> {
       _controller?.pausePreview();
       _isSearch.value = true;
       final bytes = await image?.readAsBytes();
+      print("Before call api");
       final response = await sendToApi(Uint8List.fromList(bytes!));
       if (response != null) {
-        print(response);
-        final data = response['data'];
-        final tree = data['tree'];
-        final t = Tree(
-            id: tree['id'],
-            name: tree['name'],
-            imagePath: tree['imageUrl']);
-        treeList.add(t);
-        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        final data = response['data']['plantInfo'];
+        String plantId = data["id"];
+        String science_name = data["name"];
+        String common_name = data["details"]["common_names"][0];
+        String description = data["details"]["description"]["value"];
+        String image_url = data["details"]["image"]["value"];
+        String imageBase64 = response['data']['imageBase64'];
+        Tree tree = new Tree(
+            plantId: plantId,
+            name: science_name,
+            common_names: common_name,
+            description: description,
+            image_url: image_url,
+            imageBase64: imageBase64);
+        _isSearch.value = false;
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => PlantDetailScreen(tree: tree)));
+      } else {
+        ToastNoti.show("No plant detected");
       }
       _isSearch.value = false;
       _controller?.resumePreview();
@@ -197,11 +233,11 @@ class _CameraViewState extends State<CameraView> {
   }
 
   Future<dynamic> sendToApi(Uint8List bytes) async {
-    var response = Api.postData("plant/identification", {
-      "images": bytes,
-      "lat": latitude == 0 ? "21.0277644" : latitude,
-      "lng": longitude == 0 ? "105.8341598" : longitude,
-    });
+    final data = <String, dynamic>{};
+    data['images'] = bytes;
+    data['lat'] = (await SharePref.getLangtitude()!);
+    data['lng'] = (await SharePref.getLongtitude()!);
+    var response = Api().postData("plant/identification", data);
     return response;
   }
 
@@ -281,7 +317,7 @@ class _CameraViewState extends State<CameraView> {
       rotation = InputImageRotationValue.fromRawValue(sensorOrientation);
     } else if (Platform.isAndroid) {
       var rotationCompensation =
-      _orientations[_controller!.value.deviceOrientation];
+          _orientations[_controller!.value.deviceOrientation];
       if (rotationCompensation == null) return null;
       if (camera.lensDirection == CameraLensDirection.front) {
         // front-facing

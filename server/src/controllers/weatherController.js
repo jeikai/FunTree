@@ -1,6 +1,5 @@
 import axios from 'axios';
 import {
-	GGMAP_GEOCODE_URL,
 	OPEN_WEATHER_URL,
 	GGMAP_AQI_URL,
 } from '../config/const.js';
@@ -8,45 +7,36 @@ import { getLatAndLng } from '../utils/utils.js';
 const getCurrentWeatherData = async (req, res) => {
 	const { lat, lng } = req.query;
 	try {
-		const weather = await axios.get(OPEN_WEATHER_URL, {
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			params: {
-				lat: lat, 
-				lon: lng,
-				exclude: 'minutely,hourly,daily,alert',
-				units: 'metric',
-				appid: process.env.OPEN_WEATHER_API_KEY,
-			}, 
-		});
-		const { current } = await weather.data; 
-		const aqiRequest = axios.post(
+		const weather = await axios.get(`${OPEN_WEATHER_URL}/current.json?key=${process.env.WEATHER_API_KEY}&q=${lat},${lng}`);
+		const { current } = await weather.data;
+		const aqiRequest = axios.get(
 			GGMAP_AQI_URL,
 			{
-				universalAqi: false,
-				location: {
-					latitude: lat,
-					longitude: lng,
+				params: {
+					q: 'hanoi',
+					'x-user-lang': 'en-US',
+					'x-user-timezone': 'Asia/Hanoi',
+					'x-units-pressure': 'mbar',
+					'x-units-distance': 'kilometer',
+					'x-units-temperature': 'celsius'
 				},
-				extraComputations: ['HEALTH_RECOMMENDATIONS', 'LOCAL_AQI'],
-			},
-			{
-				headers: { 'Content-Type': 'application/json' },
-				params: { key: process.env.GGMAP_API_KEY },
+				headers: {
+					'X-RapidAPI-Key': '15b6459fb0msh5a4b07bd1e48851p17b2a3jsn7cac2df65bab',
+					'X-RapidAPI-Host': 'airvisual1.p.rapidapi.com'
+				}
 			}
+
 		);
 		const { data } = await aqiRequest;
-		const { aqi, category } = data.indexes[0];
-		const healthRecommendations = data.healthRecommendations;
+		const news = data.data.news
+		const aqi = data.data?.stations[0]?.currentMeasurement?.aqius
 		return res.status(200).json({
 			status: true,
-			message: 'OK',
-			data: {
+			message: 'OK', 
+			data: {  
 				airQuality: {
-					aqi,
-					category,
-					healthRecommendations,
+					aqi, 
+					news,
 				},
 				weather: { ...current },
 			},

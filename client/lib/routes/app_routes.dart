@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:funtree/presentation/app_navigation_screen/navigation_menu.dart';
 import 'package:funtree/presentation/homescreen_screen/mapeditorscreen_screen/mapeditorscreen_screen.dart';
 import 'package:funtree/presentation/login_screen/login_screen.dart';
 import 'package:funtree/presentation/caredetailscreen_tab_container_screen/caredetailscreen_tab_container_screen.dart';
@@ -8,6 +9,8 @@ import 'package:funtree/presentation/askingscreen_screen/askingscreen_screen.dar
 import 'package:funtree/presentation/communityscreen_screen/communityscreen_screen.dart';
 import 'package:funtree/presentation/chattingscreen_screen/chattingscreen_screen.dart';
 import 'package:funtree/presentation/app_navigation_screen/app_navigation_screen.dart';
+import 'package:funtree/presentation/logup_screen/logup_screen.dart';
+import 'package:funtree/presentation/profile/profile_screen.dart';
 
 class AppRoutes {
   static const String loginScreen = '/login_screen';
@@ -41,6 +44,12 @@ class AppRoutes {
 
   static const String mapEditorScreen = '/map_editor_screen';
 
+  static const String navigationMenu = '/navigation_menu';
+
+  static const String logUpScreen = '/logup_screen';
+
+  static const String profileScreen = '/profile_screen';
+
   static Map<String, WidgetBuilder> routes = {
     loginScreen: (context) => LoginScreen(),
     caredetailscreenTabContainerScreen: (context) =>
@@ -52,5 +61,8 @@ class AppRoutes {
     chattingscreenScreen: (context) => ChattingscreenScreen(),
     appNavigationScreen: (context) => AppNavigationScreen(),
     mapEditorScreen: (context) => MapEditorScreen(),
+    navigationMenu: (context) => NavigationMenu(),
+    logUpScreen: (context) => LogupScreen(),
+    profileScreen: (context) => ProfileScreen()
   };
 }

@@ -9,20 +9,25 @@ dependencies:
   cached_network_image: ^3.3.0
   flutter_svg: ^2.0.9
   readmore: ^2.2.0
-  intl: ^0.18.0
+  intl: ^0.18.1
   dotted_border: ^2.0.0
   carousel_slider: ^4.2.1
   uuid: ^4.2.2
-  shared_preferences: ^2.0.6
+  shared_preferences: ^2.2.2
   google_nav_bar: ^5.0.6
   camera: ^0.10.5+9
   geolocator: ^11.0.0
   geocoding: ^2.2.0
   flutter_custom_clippers: ^2.1.0
   custom_clippers:
-  velocity_x:
+  velocity_x: ^4.1.2
   google_ml_kit: ^0.16.3
-dev_dependencies: 
+  get: ^4.6.6
+  fluttertoast: ^8.2.4
+  provider: ^6.1.2
+  path_provider: ^2.1.3
+dev_dependencies:
+  flutter_launcher_icons: "^0.13.1"
   flutter_test: 
     sdk: flutter
 flutter: 
@@ -35,3 +40,20 @@ flutter:
       fonts: 
         - asset: assets/fonts/ItimRegular.ttf
           weight: 400
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/img_garden.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+    image_path: "assets/images/img_garden.png"
+    background_color: "#hexcode"
+    theme_color: "#hexcode"
+  windows:
+    generate: true
+    image_path: "assets/images/img_garden.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "path/to/image.png"

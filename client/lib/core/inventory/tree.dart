@@ -1,3 +1,5 @@
+import 'package:funtree/backend/backend.dart';
+import 'package:funtree/core/SharePref.dart';
 import 'package:funtree/core/utils/image_constant.dart';
 import 'package:uuid/uuid.dart';
 
@@ -6,10 +8,10 @@ class Tree {
   String uuid;
   String name;
   String address;
-  String temperature;
-  String aqi;
-  String humidity;
-  String wind;
+  double temperature;
+  int aqi;
+  int humidity;
+  double wind;
   String imagePath;
   String notificationImagePath;
 
@@ -17,10 +19,10 @@ class Tree {
       {this.id = "1",
       this.name = "Tree",
       this.address = "Address",
-      this.temperature = "29°",
-      this.aqi = "112",
-      this.humidity = "95%",
-      this.wind = "13 km/h",
+      this.temperature = 29.0,
+      this.aqi = 112,
+      this.humidity = 95,
+      this.wind = 13.0,
       String? imagePath,
       String? notificationImagePath})
       : imagePath = imagePath ?? ImageConstant.imgTree,
@@ -34,78 +36,40 @@ class Tree {
   }
 }
 
-List<Tree> treeList = [
-  Tree(
-      name: "Fun Tree 1",
-      address: "Hanoi",
-      temperature: "29°",
-      aqi: "112",
-      humidity: "95%",
-      wind: "13 km/h"),
-  Tree(
-      name: "Fun Tree 2",
-      address: "Hanoi",
-      temperature: "29°",
-      aqi: "112",
-      humidity: "95%",
-      wind: "13 km/h"),
-  Tree(
-      name: "Fun Tree 3",
-      address: "Hanoi",
-      temperature: "29°",
-      aqi: "112",
-      humidity: "95%",
-      wind: "13 km/h"),
-  Tree(
-      name: "Fun Tree 4",
-      address: "Hanoi",
-      temperature: "29°",
-      aqi: "112",
-      humidity: "95%",
-      wind: "13 km/h"),
-  Tree(
-      name: "Fun Tree 5",
-      address: "Hanoi",
-      temperature: "29°",
-      aqi: "112",
-      humidity: "95%",
-      wind: "13 km/h"),
-  Tree(
-      name: "Fun Tree 6",
-      address: "Hanoi",
-      temperature: "29°",
-      aqi: "112",
-      humidity: "95%",
-      wind: "13 km/h"),
-  Tree(
-      name: "Fun Tree 7",
-      address: "Hanoi",
-      temperature: "29°",
-      aqi: "112",
-      humidity: "95%",
-      wind: "13 km/h"),
-  Tree(
-      name: "Fun Tree 8",
-      address: "Hanoi",
-      temperature: "29°",
-      aqi: "112",
-      humidity: "95%",
-      wind: "13 km/h"),
-  Tree(
-      name: "Fun Tree 9",
-      address: "Hanoi",
-      temperature: "29°",
-      aqi: "112",
-      humidity: "95%",
-      wind: "13 km/h"),
-  Tree(
-      name: "Fun Tree 10",
-      address: "Hanoi",
-      temperature: "29°",
-      aqi: "112",
-      humidity: "95%",
-      wind: "13 km/h"),
-];
+List<Tree> treeList = [];
+
+Future<void> getData() async {
+  try {
+    var response = await Api().getData('plant');
+    for (var item in response!["response"]) {
+      String id = item['_id'];
+      String name = item['common_names'] ?? "Tree";
+      String imagePath = item['url'] ?? ImageConstant.imgTree;
+      int AQI = 0;
+      int humidity = 0;
+      double wind = 0.00;
+      double temp = 0.0;
+      String currentAddress = "";
+      temp = (await SharePref.getTemp())!;
+      AQI = (await SharePref.getAqi()!);
+      humidity = (await SharePref.getHumidity()!);
+      wind = (await SharePref.getWind()!);
+      currentAddress = (await SharePref.getAdress())!;
+      Tree tree = Tree(
+          id: id,
+          name: name,
+          address: currentAddress,
+          temperature: temp,
+          aqi: AQI,
+          humidity: humidity,
+          wind: wind,
+          imagePath: imagePath);
+      treeList.add(tree);
+    }
+  } catch (e) {
+    print(e);
+  }
+}
 
 List<int> _isPlaced = [];
 

@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { identifyPlant } from '@/controllers/plantController';
+import { identifyPlant, createPlant, deleteAllPlant, getAllPlant } from '@/controllers/plantController';
 import multer from 'multer';
 import { use } from '@/helper/utils';
 const storage = multer.diskStorage({
 	destination: (req, file, callback) => {
-		callback(null, './uploads'); // ->("./uploads")  this is the destination where files will save in the HArdDisk Storage
+		callback(null, './uploads');
 	},
 	filename: (req, file, callback) => {
 		callback(null, file.originalname);
@@ -19,5 +19,7 @@ api.post(
 	upload.array('images'),
 	use(identifyPlant)
 );
-
+api.post('/api/plant/create', use(createPlant))
+api.get('/api/plant', use(getAllPlant))
+api.delete('/api/plant', use(deleteAllPlant))
 export default api;

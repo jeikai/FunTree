@@ -24,9 +24,10 @@ void loadMap() {
 }
 
 class Api {
-  static String baseUrl = "https://89647e1c-59a8-41e4-bb5f-e6c75191a04a.mock.pstmn.io/api/";
+  // static String baseUrl = "https://89647e1c-59a8-41e4-bb5f-e6c75191a04a.mock.pstmn.io/api/";
+  static String baseUrl = "http://192.168.40.189:3000/api/";
 
-  static Future<Map<String, dynamic>?> getData(String path) async {
+   Future<Map<String, dynamic>?> getData(String path) async {
     final Uri uri = Uri.parse(baseUrl + path);
     try {
       Map<String, String> headers = {
@@ -46,7 +47,7 @@ class Api {
     }
   }
 
-  static Future<Map<String, dynamic>?> postData(String path, Map<String, dynamic> data) async {
+   Future<Map<String, dynamic>?> postData(String path, Map<String, dynamic> data) async {
     final Uri uri = Uri.parse(baseUrl + path);
     try {
       Map<String, String> headers = {
@@ -56,6 +57,26 @@ class Api {
       if (response.statusCode == 200 || response.statusCode == 201) {
         Map<String, dynamic> jsonDataList = jsonDecode(response.body);
         return jsonDataList;
+      } else {
+        print('Có lỗi xảy ra: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Lỗi: $e');
+      return null;
+    }
+  }
+  Future<List<dynamic>?> getDataMessage(String path) async {
+    final Uri uri = Uri.parse(baseUrl + path);
+    try {
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+      };
+      final http.Response response =
+      await http.post(uri, headers: headers);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        List<dynamic> jsonResponse = jsonDecode(response.body);
+        return jsonResponse;
       } else {
         print('Có lỗi xảy ra: ${response.statusCode}');
         return null;

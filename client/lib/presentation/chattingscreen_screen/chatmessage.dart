@@ -30,7 +30,7 @@ class ChatMessage extends StatelessWidget {
               padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: isUser
-                    ? Color.fromRGBO(149, 147, 212, 1)
+                    ? Color.fromRGBO(73, 136, 85, 1)
                     : Color.fromRGBO(250, 241, 255, 1),
                 boxShadow: [
                   BoxShadow(

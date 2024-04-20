@@ -22,11 +22,9 @@ class MapEditorScreen extends StatefulWidget {
 class MapEditorScreenState extends State<MapEditorScreen> {
   int? _index = null;
 
-
   @override
   void dispose() {
     super.dispose();
-
   }
 
   @override
@@ -236,7 +234,6 @@ class METreeSelectorState extends State<METreeSelector> {
     }
     final bool temp = list.length % 2 == 0;
     return Container(
-
         color: appTheme.green100,
         child: CarouselSlider.builder(
           options: CarouselOptions(
@@ -248,31 +245,35 @@ class METreeSelectorState extends State<METreeSelector> {
           itemBuilder: (context, index, realIdx) {
             final int first = index * 2;
             final int second = first + 1;
-            final List<int> _ = [first,second];
+            final List<int> _ = [first, second];
             return Row(
               children: _.map((idx) {
                 if (idx >= list.length) {
-                  if(idx == second) return Expanded(child: SizedBox(), flex: 1,);
-                  return Expanded(flex: 1,
+                  if (idx == second)
+                    return Expanded(
+                      child: SizedBox(),
+                      flex: 1,
+                    );
+                  return Expanded(
+                    flex: 1,
                     child: Center(
                         child: Container(
-                          height: 100.v,
-                          width: 100.v,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                  color: appTheme.green60001, width: 1),
-                              color: appTheme.gray300.withAlpha(100),
-                              backgroundBlendMode: BlendMode.multiply
-                          ),
-                          child: Center(
-                            child: Icon(Icons.add,
-                              color: appTheme.blueGray700,
-                              size: 25.adaptSize,
-                            ),
-                          ),
-                        )
-                    ),
+                      height: 100.v,
+                      width: 100.v,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border:
+                              Border.all(color: appTheme.green60001, width: 1),
+                          color: appTheme.gray300.withAlpha(100),
+                          backgroundBlendMode: BlendMode.multiply),
+                      child: Center(
+                        child: Icon(
+                          Icons.add,
+                          color: appTheme.blueGray700,
+                          size: 25.adaptSize,
+                        ),
+                      ),
+                    )),
                   );
                 }
                 return Expanded(
@@ -322,7 +323,8 @@ class MainEditor extends StatefulWidget {
 ValueNotifier<bool?> _isPlaced = ValueNotifier(null);
 
 class _MainEditorState extends State<MainEditor> {
-  int? get index => _isPlaced.value == null || _isPlaced.value! ? null : widget.index;
+  int? get index =>
+      _isPlaced.value == null || _isPlaced.value! ? null : widget.index;
 
   bool get _isEditing {
     return index != null || _isDragging;
@@ -346,8 +348,13 @@ class _MainEditorState extends State<MainEditor> {
             behavior: HitTestBehavior.opaque,
             child: child,
             onTapDown: _isDragging ? null : onPlaceTree,
-            onPanUpdate: _isDragging ? _onDrag : null ,
-            onPanEnd: _isDragging ? (details) => setState(() {_isDragging = false; print("a1");}) : null,
+            onPanUpdate: _isDragging ? _onDrag : null,
+            onPanEnd: _isDragging
+                ? (details) => setState(() {
+                      _isDragging = false;
+                      print("a1");
+                    })
+                : null,
           );
         },
       ),
@@ -383,7 +390,8 @@ class _MainEditorState extends State<MainEditor> {
           ),
           ...map.treeObjects.map((e) {
             var w = _isDragging && e == draggingObject ? e.width * 3 : e.width;
-            var h = _isDragging && e == draggingObject ? e.height * 3 : e.height;
+            var h =
+                _isDragging && e == draggingObject ? e.height * 3 : e.height;
             return Positioned(
                 left: e.x - w / 2,
                 top: e.y - h / 2,
