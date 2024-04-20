@@ -29,13 +29,13 @@ const getCurrentWeatherData = async (req, res) => {
 		);
 		const { data } = await aqiRequest;
 		const news = data.data.news
-		const aqi = data.data.stations[0].currentMeasurement.aqius
+		const aqi = data.data?.stations[0]?.currentMeasurement?.aqius
 		return res.status(200).json({
 			status: true,
-			message: 'OK',
-			data: {
+			message: 'OK', 
+			data: {  
 				airQuality: {
-					aqi,
+					aqi, 
 					news,
 				},
 				weather: { ...current },

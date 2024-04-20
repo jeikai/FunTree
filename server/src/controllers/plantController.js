@@ -153,7 +153,7 @@ export const getAllPlant = async (req, res) => {
 		const response = await Plant.getAll();
 		return res.status(200).json({
 			status: true,
-			response: response
+			response: response 
 		})
 	} catch (error) { 
 		console.log(error)

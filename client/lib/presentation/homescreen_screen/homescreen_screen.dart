@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:funtree/backend/backend.dart';
 import 'package:funtree/core/SharePref.dart';
 import 'package:funtree/core/app_export.dart';
+import 'package:funtree/core/inventory/tree.dart';
 import 'package:funtree/widgets/Header.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -105,6 +106,7 @@ class _HomescreenScreenState extends State<HomescreenScreen> {
   Future<void> _fetchData() async {
     await _determinePosition();
     await getWeather();
+    await getData();
     setState(() {
       isLoading = false;
     });

@@ -8,10 +8,10 @@ class Tree {
   String uuid;
   String name;
   String address;
-  String temperature;
-  String aqi;
-  String humidity;
-  String wind;
+  double temperature;
+  int aqi;
+  int humidity;
+  double wind;
   String imagePath;
   String notificationImagePath;
 
@@ -19,10 +19,10 @@ class Tree {
       {this.id = "1",
       this.name = "Tree",
       this.address = "Address",
-      this.temperature = "29°",
-      this.aqi = "112",
-      this.humidity = "95%",
-      this.wind = "13 km/h",
+      this.temperature = 29.0,
+      this.aqi = 112,
+      this.humidity = 95,
+      this.wind = 13.0,
       String? imagePath,
       String? notificationImagePath})
       : imagePath = imagePath ?? ImageConstant.imgTree,
@@ -36,21 +36,14 @@ class Tree {
   }
 }
 
-List<Tree> treeList = [
-  Tree(
-      name: "Fun Tree 1",
-      address: "Hanoi",
-      temperature: "29°",
-      aqi: "112",
-      humidity: "95%",
-      wind: "13 km/h")
-];
+List<Tree> treeList = [];
 
 Future<void> getData() async {
   try {
     var response = await Api().getData('plant');
     for (var item in response!["response"]) {
-      String name = item['name'] ?? "Tree";
+      String id = item['_id'];
+      String name = item['common_names'] ?? "Tree";
       String imagePath = item['url'] ?? ImageConstant.imgTree;
       int AQI = 0;
       int humidity = 0;
@@ -63,17 +56,16 @@ Future<void> getData() async {
       wind = (await SharePref.getWind()!);
       currentAddress = (await SharePref.getAdress())!;
       Tree tree = Tree(
+          id: id,
           name: name,
           address: currentAddress,
-          temperature: temp as String,
-          aqi: AQI as String,
-          humidity: humidity as String,
-          wind: wind as String,
+          temperature: temp,
+          aqi: AQI,
+          humidity: humidity,
+          wind: wind,
           imagePath: imagePath);
       treeList.add(tree);
     }
-    print(treeList);
-    print("hioii");
   } catch (e) {
     print(e);
   }

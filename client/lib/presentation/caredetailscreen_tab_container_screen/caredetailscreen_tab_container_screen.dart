@@ -45,7 +45,7 @@ class CaredetailscreenTabContainerScreenState
                           child:
                               Column(mainAxisSize: MainAxisSize.min, children: [
                             Container(
-                              margin: EdgeInsets.all(5.adaptSize),
+                                margin: EdgeInsets.all(5.adaptSize),
                                 height: 21.v,
                                 width: 278.h,
                                 decoration: BoxDecoration(
@@ -86,8 +86,7 @@ class CaredetailscreenTabContainerScreenState
                                           CaredetailscreenPage(),
                                           CaredetailscreenPage(),
                                           RemiderdetailscreenPage()
-                                        ]
-                                )))
+                                        ])))
                           ])))
                 ]))));
   }
@@ -100,12 +99,12 @@ class CaredetailscreenTabContainerScreenState
             height: 367.v,
             width: double.maxFinite,
             child: Stack(alignment: Alignment.topCenter, children: [
-              CustomImageView(
+              Image(
+                image: NetworkImage("https://plant-id.ams3.cdn.digitaloceanspaces.com/knowledge_base/wikipedia/1c6/1c6e0d63a351532d3c391092a5f12dfb0fa236e5.jpg"),
+                height: 560.adaptSize,
+                width: 560.adaptSize,
                 fit: BoxFit.cover,
-                  imagePath: ImageConstant.imgPicShop45,
-                  height: 367.v,
-                  width: 360.h,
-                  alignment: Alignment.center),
+              ),
               Align(
                   alignment: Alignment.topCenter,
                   child: Padding(
@@ -119,7 +118,7 @@ class CaredetailscreenTabContainerScreenState
                                 margin: EdgeInsets.only(
                                     left: 4.h, top: 2.v, bottom: 3.v),
                                 onTap: () {
-                                  onTapBack(context);
+                                  Navigator.of(context).pop();
                                 }),
                             actions: [
                               AppbarTrailingImage(
@@ -128,24 +127,25 @@ class CaredetailscreenTabContainerScreenState
                             ]),
                       ]))),
               Align(
-                alignment: Alignment(0.0, 0.4),
+                  alignment: Alignment(0.0, 0.4),
                   child: Padding(
                       padding: EdgeInsets.only(bottom: 5.v),
                       child: Stack(
                         children: [
-                          Text("Cactus", style: theme.textTheme.headlineLarge?.copyWith(
-                            fontSize: 60.adaptSize,
-                            foreground: Paint()
-                              ..style = PaintingStyle.stroke
-                              ..strokeWidth = 5.adaptSize
-                              ..color = Colors.green[700]!,
-                          )),
-                          Text("Cactus", style: theme.textTheme.headlineLarge?.copyWith(
-                            fontSize: 60.adaptSize,
-                          ))
+                          Text("snake plant",
+                              style: theme.textTheme.headlineLarge?.copyWith(
+                                fontSize: 60.adaptSize,
+                                foreground: Paint()
+                                  ..style = PaintingStyle.stroke
+                                  ..strokeWidth = 5.adaptSize
+                                  ..color = Colors.green[700]!,
+                              )),
+                          Text("snake plant",
+                              style: theme.textTheme.headlineLarge?.copyWith(
+                                fontSize: 60.adaptSize,
+                              ))
                         ],
-                      ))
-              )
+                      )))
             ])));
   }
 

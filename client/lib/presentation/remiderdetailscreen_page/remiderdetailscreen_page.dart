@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:funtree/backend/backend.dart';
+import 'package:funtree/core/SharePref.dart';
 import 'package:funtree/core/app_export.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -24,11 +25,12 @@ class RemiderdetailscreenPageState extends State<RemiderdetailscreenPage>
   double longitude = 0.0;
   int AQI = 0;
   int humidity = 0;
-  double wind = 0.00;
+  double wind = 0.0;
   double temp = 0.0;
   String currentAddress = "";
   bool isLoading = true;
-  String recommendation = "";
+  String recommendation = "Dracaena trifasciata is a species of flowering plant in the family Asparagaceae, native to tropical West Africa from Nigeria east to the Congo. It is most commonly known as the snake plant, Saint George's sword, mother-in-law's tongue, and viper's bowstring hemp, among other names. Until 2017, it was known under the synonym Sansevieria trifasciata.";
+  String image = "";
   Future<void> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -64,24 +66,13 @@ class RemiderdetailscreenPageState extends State<RemiderdetailscreenPage>
   }
 
   Future<void> getWeather() async {
-    try {
-      final response =
-          await Api().getData("weather/current?lat=${latitude}&lng=${longitude}");
-      if (response != null) {
-        print(response["data"]["airQuality"]["healthRecommendations"]);
-        print(response["data"]["weather"]);
-        AQI = response["data"]["airQuality"]["aqi"];
-        humidity = response["data"]["weather"]["humidity"];
-        wind = response["data"]["weather"]["wind_speed"];
-        temp = response["data"]["weather"]["temp"];
-        recommendation = response["data"]["airQuality"]["healthRecommendations"]["generalPopulation"];
-        print(AQI);
-      } else {
-        print("Failed to fetch weather data: Response is null.");
-      }
-    } catch (e) {
-      print("An error occurred while fetching weather data: $e");
-    }
+    currentAddress = (await SharePref.getAdress()!);
+    temp = (await SharePref.getTemp())!;
+    AQI = (await SharePref.getAqi()!);
+    humidity = (await SharePref.getHumidity()!);
+    wind = (await SharePref.getWind()!);
+    currentAddress = (await SharePref.getAdress())!;
+    image = (await SharePref.getWeatherImage()!);
   }
 
   Future<void> _fetchData() async {
@@ -147,7 +138,7 @@ class RemiderdetailscreenPageState extends State<RemiderdetailscreenPage>
   /// Section Widget
   Widget _buildWeatherSection(BuildContext context) {
     return Container(
-      width: 317.h,
+      width: 400.h,
       padding: EdgeInsets.symmetric(horizontal: 10.h),
       decoration: AppDecoration.fillOnError1.copyWith(
         borderRadius: BorderRadiusStyle.roundedBorder15,
@@ -176,8 +167,8 @@ class RemiderdetailscreenPageState extends State<RemiderdetailscreenPage>
           ),
           Row(
             children: [
-              CustomImageView(
-                imagePath: ImageConstant.imgSunBehindSmall,
+              Image(
+                image: NetworkImage('http:' + image),
                 height: 60.adaptSize,
                 width: 60.adaptSize,
               ),
@@ -192,7 +183,7 @@ class RemiderdetailscreenPageState extends State<RemiderdetailscreenPage>
                     children: [
                       TextSpan(
                           text:
-                          "Address: Hanoi\n",
+                          "Address: ${currentAddress}\n",
                           style:
                           CustomTextStyles.bodySmallff445d48),
                       TextSpan(
