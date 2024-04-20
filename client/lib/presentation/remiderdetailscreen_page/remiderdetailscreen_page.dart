@@ -251,7 +251,7 @@ class RemiderdetailscreenPageState extends State<RemiderdetailscreenPage>
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: "Weather: ",
+                    text: "Detail: ",
                     style: CustomTextStyles.titleLargeff445d48,
                   ),
                   TextSpan(

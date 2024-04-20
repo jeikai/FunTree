@@ -25,7 +25,7 @@ void loadMap() {
 
 class Api {
   // static String baseUrl = "https://89647e1c-59a8-41e4-bb5f-e6c75191a04a.mock.pstmn.io/api/";
-  static String baseUrl = "http://192.168.40.222:3000/api/";
+  static String baseUrl = "http://192.168.40.189:3000/api/";
 
    Future<Map<String, dynamic>?> getData(String path) async {
     final Uri uri = Uri.parse(baseUrl + path);
