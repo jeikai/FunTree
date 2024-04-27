@@ -6,7 +6,7 @@ const axios = require('axios');
 
 export const getChatResponse = async (req, res) => {
 	try {
-		const userId = req.params.userId;
+		const userId = req.params.userId; 
 		console.log(userId)
 		const { prompt } = await req.body;
 		const result = await chat.sendMessage(prompt);
